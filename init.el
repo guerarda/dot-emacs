@@ -85,7 +85,13 @@
 
 (use-package magit
   :ensure t
-  :config (add-hook 'magit-mode-hook 'magit-svn-mode)
+  :config
+  (unbind-key "<C-return>" magit-mode-map)
+  (add-hook 'magit-mode-hook 'magit-svn-mode)
+  (custom-set-faces
+   '(magit-hash ((t (:foreground "#dc322f"))))
+   '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
+   '(magit-log-date ((t (:foreground "#859900")))))
   :bind ("C-x g" . magit-status))
 
 (use-package paredit
