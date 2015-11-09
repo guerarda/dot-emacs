@@ -2,6 +2,10 @@
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 (require 'use-package)
 
 ;; No welcome page
@@ -69,29 +73,26 @@
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only))
 
-(use-package irony
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode))
-
-;; (use-package flycheck
-;;   :bind ("C-c l" . flycheck-list-errors)
+;; (use-package irony
 ;;   :config
-;;   (add-hook 'prog-mode-hook 'flycheck-mode)
-;;   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+;;   (add-hook 'c++-mode-hook 'irony-mode)
+;;   (add-hook 'c-mode-hook 'irony-mode)
+;;   (add-hook 'objc-mode-hook 'irony-mode))
 
-(use-package ledger)
+(use-package flycheck
+  :bind ("C-c l" . flycheck-list-errors)
+  :config
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (use-package magit
   :ensure t
+  :init
+  (use-package magit-svn
+    :ensure t)
   :config
   (unbind-key "<C-return>" magit-mode-map)
   (add-hook 'magit-mode-hook 'magit-svn-mode)
-  (custom-set-faces
-   '(magit-hash ((t (:foreground "#dc322f"))))
-   '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
-   '(magit-log-date ((t (:foreground "#859900")))))
   :bind ("C-x g" . magit-status))
 
 (use-package paredit
