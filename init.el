@@ -17,8 +17,7 @@
 ;; Highlight current line
 (global-hl-line-mode 1)
 
-(global-visual-line-mode 1)
-(setq-default visual-line-fringe-indicators t)
+(setq ido-everywhere t)
 
 ;; Map 'cmd' to Meta and 'alt' to alt
 (setq-default mac-option-key-is-meta nil)
