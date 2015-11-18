@@ -36,15 +36,15 @@
 
 (defun my-prog-mode-hook ()
   (linum-mode)
-;  (flycheck-mode 1)
+  (flycheck-mode 1)
   (setq-default linum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
 (defun my-c-mode-hook ()
-  (setq-default c-default-style "k&r"
-                c-basic-offset 4)
+  (setq c-default-style "linux"
+        c-basic-offset 4)
   (bind-key "C-c C-k" #'compile c-mode-base-map))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 
@@ -82,7 +82,8 @@
   :bind ("C-c l" . flycheck-list-errors)
   :config
   (add-hook 'prog-mode-hook 'flycheck-mode)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
+                                             emacs-lisp)))
 
 (use-package magit
   :ensure t
