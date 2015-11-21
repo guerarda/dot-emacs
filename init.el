@@ -31,7 +31,7 @@
 (prefer-coding-system 'utf-8)
 (load-library "iso-transl")
 
-(bind-key "<C-return>" #'other-window)
+(bind-key "<C-M-return>" #'other-window)
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 
 (defun my-prog-mode-hook ()
@@ -90,9 +90,11 @@
   (use-package magit-svn
     :ensure t)
   :config
-  (unbind-key "<C-return>" magit-mode-map)
   (add-hook 'magit-mode-hook 'magit-svn-mode)
   :bind ("C-x g" . magit-status))
+
+(use-package org
+  :ensure t)
 
 (use-package paredit
   :ensure t
@@ -119,6 +121,8 @@
 (use-package solarized-theme
   :ensure t
   :config
-  (setq-default solarized-distinct-fring-background t)
-  (setq-default solarized-high-contrast-mode-line t)
+  (setq solarized-use-variable-pitch nil
+;        solarized-scale-org-headlines nil
+        solarized-distinct-fring-background t
+        solarized-high-contrast-mode-line t)
   (load-theme 'solarized-dark t))
