@@ -31,6 +31,13 @@
 (prefer-coding-system 'utf-8)
 (load-library "iso-transl")
 
+(setenv "PATH"
+        (concat (getenv "PATH")
+                ":/usr/local/bin:/opt/local/bin"))
+(setq exec-path (append exec-path
+                        '("/usr/local/bin"
+                          "/opt/local/bin")))
+
 (bind-key "<C-M-return>" #'other-window)
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 
@@ -53,12 +60,6 @@
 
 (use-package cider
   :config
-  (setenv "PATH"
-          (concat (getenv "PATH")
-                  ":/usr/local/bin:/opt/local/bin"))
-  (setq exec-path (append exec-path
-                          '("/usr/local/bin"
-                            "/opt/local/bin")))
   (setq-default cider-show-error-buffer nil)
   (setq-default cider-stacktrace-fill-column 80))
 
@@ -95,7 +96,10 @@
   :bind ("C-x g" . magit-status))
 
 (use-package org
-  :ensure t)
+  :ensure t
+  :bind ("C-c C-v k" . org-babel-remove-result)
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package paredit
   :ensure t
