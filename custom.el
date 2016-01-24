@@ -12,8 +12,16 @@
      ("account" "%(ledger) -f %(ledger-file) reg %(account)"))))
  '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t))))
  '(org-confirm-babel-evaluate nil)
- '(org-todo-keyword-faces (quote (("INPROGRESS" . "#6c71c4"))))
- '(org-todo-keywords (quote ((sequence "TODO" "INPROGRESS" "DONE")))))
+ '(org-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc322f")
+     ("INPROGRESS" . "#b58900")
+     ("CANCELLED" . "#2aa198")
+     ("WAITING" . "#6c71c4"))))
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "INPROGRESS(p)" "CANCELLED(c)" "DONE(d)" "WAITING(w)"))))
+ '(visible-bell nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
