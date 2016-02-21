@@ -16,11 +16,13 @@
    (quote
     (("TODO" . "#dc322f")
      ("INPROGRESS" . "#b58900")
+     ("WAITING" . "#cb4b16")
+     ("REVIEW" . "#6c71c4")
      ("CANCELLED" . "#2aa198")
-     ("WAITING" . "#6c71c4"))))
+     ("DONE" . "#2aa198"))))
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "INPROGRESS(p)" "CANCELLED(c)" "DONE(d)" "WAITING(w)"))))
+    ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "|" "CANCELLED(c)" "REVIEW(r)" "DONE(d)"))))
  '(visible-bell nil))
 
 (custom-set-faces

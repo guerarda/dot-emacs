@@ -2,7 +2,6 @@
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
-
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -13,6 +12,9 @@
 
 ;; y-or-n prompt
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+;; No ring bell
+(setq ring-bell-function 'ignore)
 
 ;; Highlight current line
 (global-hl-line-mode 1)
@@ -63,9 +65,9 @@
   (setq-default cider-show-error-buffer nil)
   (setq-default cider-stacktrace-fill-column 80))
 
-(use-package company
-  :config
-  (add-hook 'prog-mode-hook 'company-mode))
+;;(use-package company
+;;  :config
+;;  (add-hook 'prog-mode-hook 'company-mode))
 
 (use-package ido-vertical-mode
   :ensure t
@@ -79,12 +81,12 @@
 ;;   (add-hook 'c-mode-hook 'irony-mode)
 ;;   (add-hook 'objc-mode-hook 'irony-mode))
 
-(use-package flycheck
-  :bind ("C-c l" . flycheck-list-errors)
-  :config
-  (add-hook 'prog-mode-hook 'flycheck-mode)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
-                                             emacs-lisp)))
+ (use-package flycheck
+   :bind ("C-c l" . flycheck-list-errors)
+   :config
+   (add-hook 'prog-mode-hook 'flycheck-mode)
+   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
+                                              emacs-lisp)))
 
 (use-package magit
   :ensure t
