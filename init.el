@@ -54,6 +54,7 @@
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
         c-basic-offset 4)
+  (electric-pair-mode)
   (bind-key "C-c C-k" #'compile c-mode-base-map))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 
@@ -65,9 +66,9 @@
   (setq-default cider-show-error-buffer nil)
   (setq-default cider-stacktrace-fill-column 80))
 
-;;(use-package company
-;;  :config
-;;  (add-hook 'prog-mode-hook 'company-mode))
+(use-package company
+ :config
+ (add-hook 'prog-mode-hook 'company-mode))
 
 (use-package ido-vertical-mode
   :ensure t
@@ -80,6 +81,14 @@
 ;;   (add-hook 'c++-mode-hook 'irony-mode)
 ;;   (add-hook 'c-mode-hook 'irony-mode)
 ;;   (add-hook 'objc-mode-hook 'irony-mode))
+
+;; (defun my-irony-mode-hook ()
+;;   (define-key irony-mode-map [remap completion-at-point]
+;;     'irony-completion-at-point-async)
+;;   (define-key irony-mode-map [remap complete-symbol]
+;;     'irony-completion-at-point-async))
+;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
  (use-package flycheck
    :bind ("C-c l" . flycheck-list-errors)
