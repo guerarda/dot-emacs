@@ -32,6 +32,7 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (load-library "iso-transl")
+(setq-default buffer-file-coding-system 'utf-8-unix)
 
 (setenv "PATH"
         (concat (getenv "PATH")

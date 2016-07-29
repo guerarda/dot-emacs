@@ -10,8 +10,10 @@
      ("reg" "%(ledger) -f %(ledger-file) reg")
      ("payee" "%(ledger) -f %(ledger-file) reg @%(payee)")
      ("account" "%(ledger) -f %(ledger-file) reg %(account)"))))
- '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t))))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t) (awk . t) (C . t))))
  '(org-confirm-babel-evaluate nil)
+ '(org-src-fontify-natively t)
+ '(org-src-preserve-indentation t)
  '(org-todo-keyword-faces
    (quote
     (("TODO" . "#dc322f")
@@ -22,7 +24,7 @@
      ("DONE" . "#2aa198"))))
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "|" "CANCELLED(c)" "REVIEW(r)" "DONE(d)"))))
+    ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
  '(visible-bell nil)
  '(whitespace-style
    (quote
