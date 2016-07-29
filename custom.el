@@ -23,7 +23,10 @@
  '(org-todo-keywords
    (quote
     ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "|" "CANCELLED(c)" "REVIEW(r)" "DONE(d)"))))
- '(visible-bell nil))
+ '(visible-bell nil)
+ '(whitespace-style
+   (quote
+    (face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

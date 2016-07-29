@@ -46,6 +46,7 @@
 (defun my-prog-mode-hook ()
   (linum-mode)
   (flycheck-mode 1)
+  (whitespace-mode 1)
   (setq-default linum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
