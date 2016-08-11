@@ -108,6 +108,10 @@
   (add-hook 'magit-mode-hook 'magit-svn-mode)
   :bind ("C-x g" . magit-status))
 
+(use-package intero
+  :config
+  (add-hook 'haskell-mode-hook 'intero-mode))
+
 (use-package org
   :ensure t
   :bind ("C-c C-v k" . org-babel-remove-result)
