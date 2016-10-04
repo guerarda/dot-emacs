@@ -28,7 +28,7 @@
     ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
  '(package-selected-packages
    (quote
-    (yaml-mode use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ido-vertical-mode haskell-mode glsl-mode flycheck company better-defaults)))
+    (nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode gnuplot glsl-mode cider better-defaults)))
  '(visible-bell nil)
  '(whitespace-style
    (quote

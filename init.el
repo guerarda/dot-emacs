@@ -45,10 +45,9 @@
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 
 (defun my-prog-mode-hook ()
-  (linum-mode)
+  (nlinum-mode)
   (flycheck-mode 1)
-  (whitespace-mode 1)
-  (setq-default linum-format "%4d\u2502")
+  (setq-default nlinum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
