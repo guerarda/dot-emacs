@@ -58,7 +58,12 @@
         c-basic-offset 4)
   (electric-pair-mode)
   (bind-key "C-c C-k" #'compile c-mode-base-map))
-(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+(defun my-c++-mode-hook ()
+  (font-lock-add-keywords nil
+                          '(("nullptr" . 'font-lock-keyword-face))))
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
 (use-package better-defaults
   :ensure t)
