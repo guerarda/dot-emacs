@@ -114,7 +114,9 @@
 
 (use-package org
   :ensure t
-  :bind ("C-c C-v k" . org-babel-remove-result)
+  :bind (("C-c C-v k" . org-babel-remove-result)
+         ("M-p" . org-metaup)
+         ("M-n" . org-metadown))
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 

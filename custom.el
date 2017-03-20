@@ -12,6 +12,7 @@
      ("account" "%(ledger) -f %(ledger-file) reg %(account)"))))
  '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t) (awk . t) (C . t))))
  '(org-confirm-babel-evaluate nil)
+ '(org-cycle-separator-lines 1)
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation t)
  '(org-todo-keyword-faces
@@ -25,6 +26,9 @@
  '(org-todo-keywords
    (quote
     ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
+ '(package-selected-packages
+   (quote
+    (yaml-mode use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ido-vertical-mode haskell-mode glsl-mode flycheck company better-defaults)))
  '(visible-bell nil)
  '(whitespace-style
    (quote
