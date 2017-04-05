@@ -15,6 +15,7 @@
  '(org-cycle-separator-lines 1)
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation t)
+ '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
    (quote
     (("TODO" . "#dc322f")
@@ -28,7 +29,7 @@
     ((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
  '(package-selected-packages
    (quote
-    (nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode gnuplot glsl-mode cider better-defaults)))
+    (modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode gnuplot glsl-mode cider better-defaults)))
  '(visible-bell nil)
  '(whitespace-style
    (quote
