@@ -107,7 +107,7 @@
   (add-hook 'magit-mode-hook 'magit-svn-mode)
   :bind ("C-x g" . magit-status))
 
-(use-package modern-c++-font-lock
+(use-package modern-cpp-font-lock
   :ensure t
   :config
   (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
