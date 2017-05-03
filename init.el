@@ -41,12 +41,12 @@
                         '("/usr/local/bin"
                           "/opt/local/bin")))
 
-(bind-key "<C-M-return>" #'other-window)
+(bind-key "M-o" #'other-window)
 (bind-key "C-c ;" #'comment-or-uncomment-region)
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 (defun my-prog-mode-hook ()
   (nlinum-mode)
-  (flycheck-mode 1)
   (setq-default nlinum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
@@ -150,7 +150,7 @@
   :ensure t
   :config
   (setq solarized-use-variable-pitch nil
-;        solarized-scale-org-headlines nil
+;;        solarized-scale-org-headlines nil
         solarized-distinct-fring-background t
         solarized-high-contrast-mode-line t)
   (load-theme 'solarized-dark t))
