@@ -45,6 +45,12 @@
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
+;; Splitting windows
+(bind-key "M-0" #'delete-window)
+(bind-key "M-1" #'delete-other-windows)
+(bind-key "M-2" #'split-window-vertically)
+(bind-key "M-3" #'split-window-horizontally)
+
 ;; C-a moves to first non-whitespace characted, then the real
 ;; beginning of line
 (defadvice move-beginning-of-line (around smarter-bol activate)
