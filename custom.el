@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(git-commit-summary-max-length 50)
+ '(frame-resize-pixelwise t)
  '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t) (awk . t) (C . t))))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-confirm-babel-evaluate nil)
@@ -16,7 +17,7 @@
  '(org-todo-keyword-faces
    (quote
     (("TODO" . "#dc322f")
-     ("INPROGRESS" . "#b58900")
+     ("PROGRESS" . "#b58900")
      ("WAITING" . "#cb4b16")
      ("REVIEW" . "#6c71c4")
      ("CANCELLED" . "#2aa198")

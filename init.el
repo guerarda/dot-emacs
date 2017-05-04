@@ -124,6 +124,8 @@
 
 (use-package magit
   :ensure t
+  :config
+  (delete 'Git vc-handled-backends)
   :bind ("C-x g" . magit-status))
 
 (use-package modern-cpp-font-lock
