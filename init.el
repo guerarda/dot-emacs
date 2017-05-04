@@ -1,11 +1,16 @@
 (require 'package)
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-(require 'use-package)
+(setenv "PATH"
+        (concat (getenv "PATH")
+                ":/usr/local/bin:/opt/local/bin"))
+(setq exec-path (append exec-path
+                        '("/usr/local/bin"
+                          "/opt/local/bin")))
 
 ;; No welcome page
 (setq inhibit-startup-message t)
@@ -28,21 +33,18 @@
 (setq mac-option-modifier nil)
 
 ;; Always ALWAYS use UTF-8
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(load-library "iso-transl")
 (setq-default buffer-file-coding-system 'utf-8-unix)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-(setenv "PATH"
-        (concat (getenv "PATH")
-                ":/usr/local/bin:/opt/local/bin"))
-(setq exec-path (append exec-path
-                        '("/usr/local/bin"
-                          "/opt/local/bin")))
+(setq-default ispell-program-name "/usr/local/bin/aspell")
 
 (bind-key "M-o" #'other-window)
 (bind-key "C-c ;" #'comment-or-uncomment-region)
+(bind-key "C-c o" #'whitespace-mode)
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
@@ -74,9 +76,12 @@
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
         c-basic-offset 4)
+  (c-set-offset 'case-label '0)
   (electric-pair-mode)
   (bind-key "C-c C-k" #'compile c-mode-base-map))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+(require 'use-package)
 
 (use-package better-defaults
   :ensure t)
@@ -110,20 +115,15 @@
 ;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 ;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
- (use-package flycheck
-   :bind ("C-c l" . flycheck-list-errors)
-   :config
-   (add-hook 'prog-mode-hook 'flycheck-mode)
-   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
-                                              emacs-lisp)))
+(use-package flycheck
+  :bind ("C-c l" . flycheck-list-errors)
+  :config
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
+                                             emacs-lisp)))
 
 (use-package magit
   :ensure t
-  :init
-  (use-package magit-svn
-    :ensure t)
-  :config
-  (add-hook 'magit-mode-hook 'magit-svn-mode)
   :bind ("C-x g" . magit-status))
 
 (use-package modern-cpp-font-lock
