@@ -42,16 +42,16 @@
 
 (setq-default ispell-program-name "/usr/local/bin/aspell")
 
-(bind-key "M-o" #'other-window)
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (bind-key "C-c o" #'whitespace-mode)
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
-(bind-key "M-0" #'delete-window)
-(bind-key "M-1" #'delete-other-windows)
-(bind-key "M-2" #'split-window-vertically)
-(bind-key "M-3" #'split-window-horizontally)
+(bind-key* "M-o" #'other-window)
+(bind-key* "M-0" #'delete-window)
+(bind-key* "M-1" #'delete-other-windows)
+(bind-key* "M-2" #'split-window-vertically)
+(bind-key* "M-3" #'split-window-horizontally)
 
 ;; C-a moves to first non-whitespace characted, then the real
 ;; beginning of line
@@ -126,7 +126,12 @@
   :ensure t
   :config
   (delete 'Git vc-handled-backends)
-  :bind ("C-x g" . magit-status))
+  :bind (("C-x g" . magit-status)
+         :map magit-status-mode-map
+         ("C-x 1" . magit-section-show-level-1-all)
+         ("C-x 2" . magit-section-show-level-2-all)
+         ("C-x 3" . magit-section-show-level-3-all)
+         ("C-x 4" . magit-section-show-level-4-all)))
 
 (use-package modern-cpp-font-lock
   :ensure t
