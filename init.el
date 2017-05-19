@@ -119,8 +119,24 @@
   :bind ("C-c l" . flycheck-list-errors)
   :config
   (add-hook 'prog-mode-hook 'flycheck-mode)
+  (setq-default flycheck-indication-mode 'right-fringe)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
                                              emacs-lisp)))
+
+(use-package git-gutter-fringe
+  :init
+  (add-hook 'prog-mode-hook 'git-gutter-mode)
+  :config
+  (setq-default fringes-outside-margins t)
+  (fringe-helper-define 'git-gutter-fr:added '(center repeated)
+    "XXX.....")
+  (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
+    "XXX.....")
+  (fringe-helper-define 'git-gutter-fr:deleted 'bottom
+    "X......."
+    "XX......"
+    "XXX....."
+    "XXXX...."))
 
 (use-package magit
   :ensure t
