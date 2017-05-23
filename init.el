@@ -15,16 +15,26 @@
 ;; No welcome page
 (setq inhibit-startup-message t)
 
+;; Hiding toolbars
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(horizontal-scroll-bar-mode -1)
+
 ;; y-or-n prompt
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; No ring bell
 (setq ring-bell-function 'ignore)
 
-;; Highlight current line
-(global-hl-line-mode 1)
-
-(setq ido-everywhere t)
+(setq-default indent-tabs-mode nil)
+(setq save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      load-prefer-newer t
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      backup-directory-alist `(("." . ,(concat user-emacs-directory
+					       "backups"))))
 
 ;; Map 'cmd' to Meta and 'alt' to alt
 (setq-default mac-option-key-is-meta nil)
@@ -41,6 +51,14 @@
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (setq-default ispell-program-name "/usr/local/bin/aspell")
+
+;; Searching
+(bind-key "C-s" #'isearch-forward-regexp)
+(bind-key "C-r" #'isearch-backward-regexp)
+(bind-key "C-M-s" #'isearch-forward)
+(bind-key "C-M-r" #'isearch-backward)
+
+(bind-key "C-x C-b" #'ibuffer)
 
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (bind-key "C-c o" #'whitespace-mode)
@@ -83,9 +101,6 @@
 
 (require 'use-package)
 
-(use-package better-defaults
-  :ensure t)
-
 (use-package cider
   :config
   (setq-default cider-show-error-buffer nil)
@@ -94,6 +109,16 @@
 (use-package company
  :config
  (add-hook 'prog-mode-hook 'company-mode))
+
+(use-package hl-line
+  :config
+  (global-hl-line-mode 1))
+
+(use-package ido
+  :config
+  (ido-mode t)
+  (setq ido-everywhere t)
+  (setq ido-enable-flex-matching t))
 
 (use-package ido-vertical-mode
   :ensure t
@@ -151,6 +176,9 @@
          ("C-x 3" . magit-section-show-level-3-all)
          ("C-x 4" . magit-section-show-level-4-all)))
 
+(use-package misc
+  :bind ("M-z" . zap-up-to-char))
+
 (use-package modern-cpp-font-lock
   :ensure t
   :config
@@ -175,6 +203,10 @@
   (add-hook 'lisp-mode-hook 'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
 
+(use-package paren
+  :config
+  (show-paren-mode 1))
+
 (use-package projectile
   :config
   (add-hook 'prog-mode-hook 'projectile-mode))
@@ -183,6 +215,12 @@
   :ensure t
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package saveplace
+  :ensure t
+  :config
+  (save-place-mode 1)
+  (setq save-place-file (concat user-emacs-directory "places")))
 
 (use-package smex
   :ensure t
@@ -198,3 +236,7 @@
         solarized-distinct-fring-background t
         solarized-high-contrast-mode-line t)
   (load-theme 'solarized-dark t))
+
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward))

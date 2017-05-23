@@ -3,8 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(git-commit-summary-max-length 50)
  '(frame-resize-pixelwise t)
+ '(git-commit-summary-max-length 50)
  '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t) (awk . t) (C . t))))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-confirm-babel-evaluate nil)
@@ -27,7 +27,7 @@
     ((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
  '(package-selected-packages
    (quote
-    (git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider better-defaults)))
+    (uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider)))
  '(visible-bell nil)
  '(whitespace-style
    (quote
@@ -38,6 +38,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(git-gutter-fr:modified ((t (:foreground "#b58900" :weight bold))))
  '(magit-hash ((t (:foreground "#dc322f"))))
  '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
  '(magit-log-date ((t (:foreground "#859900")))))
