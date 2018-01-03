@@ -240,3 +240,8 @@
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward))
+
+(use-package yasnippet
+  :config
+  (yas-load-directory "~/.emacs.d/snippets/")
+  (add-hook 'prog-mode-hook #'yas-minor-mode))

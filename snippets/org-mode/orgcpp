@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: orgcpp
+# key: orgcpp
+# --
+#+NAME:$1
+#+BEGIN_SRC C++ :flags -std=c++11 :main no
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+
+$0
+
+#+END_SRC
