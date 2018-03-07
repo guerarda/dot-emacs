@@ -170,7 +170,7 @@
   :config
   (delete 'Git vc-handled-backends)
   :bind (("C-x g" . magit-status)
-         :map magit-status-mode-map
+         :map magit-mode-map
          ("C-x 1" . magit-section-show-level-1-all)
          ("C-x 2" . magit-section-show-level-2-all)
          ("C-x 3" . magit-section-show-level-3-all)
