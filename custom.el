@@ -5,9 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
+ '(lsp-ui-sideline-enable nil)
  '(nlinum-highlight-current-line t)
- '(org-babel-load-languages (quote ((emacs-lisp . t) (ledger . t) (awk . t) (C . t))))
- '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
+ '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
+ '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
  '(org-confirm-babel-evaluate nil)
  '(org-fontify-done-headline t)
  '(org-fontify-whole-heading-line t)
@@ -15,24 +16,23 @@
  '(org-src-preserve-indentation t)
  '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
-   (quote
-    (("TODO" . "#dc322f")
+   '(("TODO" . "#dc322f")
      ("PROGRESS" . "#b58900")
      ("WAITING" . "#cb4b16")
      ("REVIEW" . "#6c71c4")
      ("CANCELLED" . "#2aa198")
-     ("DONE" . "#2aa198"))))
+     ("DONE" . "#2aa198")))
  '(org-todo-keywords
-   (quote
-    ((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)"))))
+   '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   (quote
-    (yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider)))
+   '(lsp-ui ccls company-lsp lsp-mode yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+ '(projectile-globally-ignored-directories
+   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls"))
  '(sgml-basic-offset 4)
  '(visible-bell nil)
+ '(whitespace-line-column 80)
  '(whitespace-style
-   (quote
-    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab)))
+   '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab))
  '(yas-global-mode t))
 
 (custom-set-faces

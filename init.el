@@ -5,12 +5,9 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-(setenv "PATH"
-        (concat (getenv "PATH")
-                ":/usr/local/bin:/opt/local/bin"))
-(setq exec-path (append exec-path
-                        '("/usr/local/bin"
-                          "/opt/local/bin")))
+;; Ensure environment variables look the same as in the shell
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;; No welcome page
 (setq inhibit-startup-message t)
@@ -88,6 +85,7 @@
   (nlinum-mode)
   (setq-default nlinum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
+  (subword-mode 1)
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
@@ -101,18 +99,49 @@
 
 (require 'use-package)
 
-(use-package cider
-  :config
-  (setq-default cider-show-error-buffer nil)
-  (setq-default cider-stacktrace-fill-column 80))
+;; (use-package cider
+;;   :config
+;;   (setq-default cider-show-error-buffer nil)
+;;   (setq-default cider-stacktrace-fill-column 80))
+
+(use-package ccls
+  :config (setq ccls-executable "ccls")
+  :hook (c-mode-common . lsp-ccls-enable))
 
 (use-package company
- :config
- (add-hook 'prog-mode-hook 'company-mode))
+  :hook (c-mode-common . company-mode))
+
+(use-package company-lsp
+  :config (push 'company-lsp company-backends))
+
+(use-package flycheck
+  :bind ("C-c l" . flycheck-list-errors)
+  :hook (prog-mode . flycheck-mode)
+  :config
+  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+    [0 0 0 0 0 4 12 28 60 124 252 124 60 28 12 4 0 0 0 0])
+  (setq-default flycheck-indication-mode 'right-fringe)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
+                                             emacs-lisp)))
+
+(use-package git-gutter
+  :hook (prog-mode . git-gutter-mode))
+
+(use-package git-gutter-fringe
+  :config
+  (setq-default fringes-outside-margins t)
+  (fringe-helper-define 'git-gutter-fr:added '(center repeated)
+    "XXX.....")
+  (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
+    "XXX.....")
+  (fringe-helper-define 'git-gutter-fr:deleted 'bottom
+    "X......."
+    "XX......"
+    "XXX....."
+    "XXXX...."))
 
 (use-package hl-line
-  :config
-  (global-hl-line-mode 1))
+  :config (global-hl-line-mode 1))
 
 (use-package ido
   :config
@@ -126,95 +155,49 @@
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only))
 
-;; (use-package irony
-;;   :config
-;;   (add-hook 'c++-mode-hook 'irony-mode)
-;;   (add-hook 'c-mode-hook 'irony-mode)
-;;   (add-hook 'objc-mode-hook 'irony-mode))
-
-;; (defun my-irony-mode-hook ()
-;;   (define-key irony-mode-map [remap completion-at-point]
-;;     'irony-completion-at-point-async)
-;;   (define-key irony-mode-map [remap complete-symbol]
-;;     'irony-completion-at-point-async))
-;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-(use-package flycheck
-  :bind ("C-c l" . flycheck-list-errors)
-  :config
-  (add-hook 'prog-mode-hook 'flycheck-mode)
-  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-    [0 0 0 0 0 4 12 28 60 124 252 124 60 28 12 4 0 0 0 0])
-  (setq-default flycheck-indication-mode 'right-fringe)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
-                                             emacs-lisp)))
-
-(use-package git-gutter-fringe
-  :init
-  (add-hook 'prog-mode-hook 'git-gutter-mode)
-  :config
-  (setq-default fringes-outside-margins t)
-  (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-    "X......."
-    "XX......"
-    "XXX....."
-    "XXXX...."))
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
 
 (use-package magit
   :ensure t
-  :config
-  (delete 'Git vc-handled-backends)
   :bind (("C-x g" . magit-status)
          :map magit-mode-map
          ("C-x 1" . magit-section-show-level-1-all)
          ("C-x 2" . magit-section-show-level-2-all)
          ("C-x 3" . magit-section-show-level-3-all)
-         ("C-x 4" . magit-section-show-level-4-all)))
+         ("C-x 4" . magit-section-show-level-4-all))
+  :config (delete 'Git vc-handled-backends))
 
 (use-package misc
   :bind ("M-z" . zap-up-to-char))
 
 (use-package modern-cpp-font-lock
   :ensure t
-  :config
-  (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
-
-(use-package intero
-  :config
-  (add-hook 'haskell-mode-hook 'intero-mode))
+  :hook (c++-mode . modern-c++-font-lock-mode))
 
 (use-package org
   :ensure t
   :bind (("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
          ("M-n" . org-metadown))
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 (use-package paredit
   :ensure t
-  :config
-  (add-hook 'clojure-mode-hook 'paredit-mode)
-  (add-hook 'lisp-mode-hook 'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
+  :hook ((clojure-mode . paredit-mode)
+         (lisp-mode . paredit-mode)
+         (emacs-lisp-mode . paredit-mode)))
 
 (use-package paren
-  :config
-  (show-paren-mode 1))
+  :config (show-paren-mode 1))
 
 (use-package projectile
-  :config
-  (add-hook 'prog-mode-hook 'projectile-mode))
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :hook (prog-mode . projectile-mode))
 
 (use-package rainbow-delimiters
   :ensure t
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package saveplace
   :ensure t
@@ -232,16 +215,31 @@
   :ensure t
   :config
   (setq solarized-use-variable-pitch nil
-;;        solarized-scale-org-headlines nil
         solarized-distinct-fring-background t
         solarized-high-contrast-mode-line t)
   (load-theme 'solarized-dark t))
 
 (use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'forward))
+  :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package yasnippet
-  :config
-  (yas-load-directory "~/.emacs.d/snippets/")
-  (add-hook 'prog-mode-hook #'yas-minor-mode))
+  :hook (prog-mode . yas-minor-mode)
+  :config (yas-load-directory "~/.emacs.d/snippets/"))
+
+;; (defun my-irony-mode-hook ()
+;;   (define-key irony-mode-map [remap completion-at-point]
+;;     'irony-completion-at-point-async)
+;;   (define-key irony-mode-map [remap complete-symbol]
+;;     'irony-completion-at-point-async))
+;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; (use-package intero
+;;   :config
+;;   (add-hook 'haskell-mode-hook 'intero-mode))
+
+;; (use-package irony
+;;   :config
+;;   (add-hook 'c++-mode-hook 'irony-mode)
+;;   (add-hook 'c-mode-hook 'irony-mode)
+;;   (add-hook 'objc-mode-hook 'irony-mode))
