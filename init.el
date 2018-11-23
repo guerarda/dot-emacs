@@ -179,7 +179,8 @@
   :ensure t
   :bind (("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
-         ("M-n" . org-metadown))
+         ("M-n" . org-metadown)
+         ("C-c c" . org-capture))
   :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 (use-package paredit

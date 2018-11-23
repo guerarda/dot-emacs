@@ -9,6 +9,17 @@
  '(nlinum-highlight-current-line t)
  '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
  '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
+ '(org-capture-templates
+   '(("b" "Add a book entry" entry
+      (file+headline "~/Documents/books.org" "2018")
+      "** %^{Book title}
+  :PROPERTIES:
+  :Title: %\\1
+  :Author:  %^{Author}
+  :Year:    %^{Year}
+  :Started: %^t
+  :Finished:
+  :END:" :kill-buffer t)))
  '(org-confirm-babel-evaluate nil)
  '(org-fontify-done-headline t)
  '(org-fontify-whole-heading-line t)
