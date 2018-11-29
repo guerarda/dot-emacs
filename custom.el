@@ -38,12 +38,15 @@
  '(package-selected-packages
    '(lsp-ui ccls company-lsp lsp-mode yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
-   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls"))
+   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
+ '(projectile-globally-ignored-files '("TAGS"))
  '(sgml-basic-offset 4)
  '(visible-bell nil)
  '(whitespace-line-column 80)
  '(whitespace-style
    '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab))
+ '(xref-prompt-for-identifier
+   '(not xref-find-definitions xref-find-definitions-other-window xref-find-definitions-other-frame xref-find-references))
  '(yas-global-mode t))
 
 (custom-set-faces
