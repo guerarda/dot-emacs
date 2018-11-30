@@ -107,7 +107,13 @@
   :hook (prog-mode . company-mode))
 
 (use-package company-lsp
-  :config (push 'company-lsp company-backends))
+  :after company
+  :demand t
+  :config
+  (push 'company-lsp company-backends)
+  (setq-default company-transformers nil)
+  (setq-default company-lsp-async t)
+  (setq-default company-lsp-cache-candidates nil))
 
 (use-package counsel
   :after ivy
