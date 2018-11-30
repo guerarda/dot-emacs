@@ -99,20 +99,27 @@
 
 (require 'use-package)
 
-;; (use-package cider
-;;   :config
-;;   (setq-default cider-show-error-buffer nil)
-;;   (setq-default cider-stacktrace-fill-column 80))
-
 (use-package ccls
   :config (setq ccls-executable "ccls")
   :hook (c-mode-common . lsp-ccls-enable))
 
 (use-package company
-  :hook (c-mode-common . company-mode))
+  :hook (prog-mode . company-mode))
 
 (use-package company-lsp
   :config (push 'company-lsp company-backends))
+
+(use-package counsel
+  :after ivy
+  :demand t
+  :bind (("C-x C-f" . counsel-find-file)
+         ("M-x" . counsel-M-x)))
+
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :demand t
+  :config
+  (counsel-projectile-mode 1))
 
 (use-package flycheck
   :bind ("C-c l" . flycheck-list-errors)
@@ -144,29 +151,43 @@
   :config (global-hl-line-mode 1))
 
 (use-package ido
+  :disabled
   :config
   (ido-mode t)
   (setq ido-everywhere t)
   (setq ido-enable-flex-matching t))
 
 (use-package ido-vertical-mode
+  :disabled
   :ensure t
   :config
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only))
+
+(use-package ivy
+  :demand t
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window)
+         ("M-H" . ivy-resume))
+  :bind (:map ivy-minibuffer-map
+              ("<tab>" . ivy-alt-done))
+  :config
+  (ivy-mode 1))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
 
 (use-package magit
   :ensure t
-  :bind (("C-x g" . magit-status)
-         :map magit-mode-map
+  :bind (("C-x g" . magit-status))
+  :bind (:map magit-mode-map
          ("C-x 1" . magit-section-show-level-1-all)
          ("C-x 2" . magit-section-show-level-2-all)
          ("C-x 3" . magit-section-show-level-3-all)
          ("C-x 4" . magit-section-show-level-4-all))
-  :config (delete 'Git vc-handled-backends))
+  :config
+  (delete 'Git vc-handled-backends)
+  (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package misc
   :bind ("M-z" . zap-up-to-char))
@@ -194,7 +215,8 @@
 
 (use-package projectile
   :bind-keymap ("C-c p" . projectile-command-map)
-  :hook (prog-mode . projectile-mode))
+  :config
+  (projectile-global-mode))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -207,6 +229,7 @@
   (setq save-place-file (concat user-emacs-directory "places")))
 
 (use-package smex
+  :disabled
   :ensure t
   :bind (("M-x" . smex)
          ("M-X" . smex-major-mode-commands)
@@ -219,6 +242,10 @@
         solarized-distinct-fring-background t
         solarized-high-contrast-mode-line t)
   (load-theme 'solarized-dark t))
+
+(use-package swiper
+  :after ivy
+  :bind ("C-s" . swiper))
 
 (use-package uniquify
   :config (setq uniquify-buffer-name-style 'forward))
@@ -234,6 +261,11 @@
 ;;     'irony-completion-at-point-async))
 ;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 ;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; (use-package cider
+;;   :config
+;;   (setq-default cider-show-error-buffer nil)
+;;   (setq-default cider-stacktrace-fill-column 80))
 
 ;; (use-package intero
 ;;   :config

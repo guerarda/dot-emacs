@@ -5,7 +5,11 @@
  ;; If there is more than one, they won't work right.
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
+ '(ivy-count-format "(%d/%d) ")
+ '(ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)) t)
+ '(ivy-use-virtual-buffers t)
  '(lsp-ui-sideline-enable nil)
+ '(magit-section-visibility-indicator nil)
  '(nlinum-highlight-current-line t)
  '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
  '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
@@ -36,11 +40,12 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   '(lsp-ui ccls company-lsp lsp-mode yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+   '(flx counsel-projectile counsel lsp-ui ccls company-lsp lsp-mode yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters projectile paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
  '(sgml-basic-offset 4)
+ '(solarized-distinct-doc-face t)
  '(visible-bell nil)
  '(whitespace-line-column 80)
  '(whitespace-style
@@ -56,7 +61,12 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "#002b36" :foreground "#839496" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "SF Mono"))))
  '(git-gutter-fr:modified ((t (:foreground "#b58900" :weight bold))))
+ '(ivy-action ((t nil)))
+ '(ivy-current-match ((t (:background "#104184"))))
  '(magit-hash ((t (:foreground "#dc322f"))))
  '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
  '(magit-log-date ((t (:foreground "#859900"))))
- '(nlinum-current-line ((t (:inherit linum :foreground "#93a1a1" :weight bold)))))
+ '(nlinum-current-line ((t (:inherit linum :foreground "#93a1a1" :weight bold))))
+ '(swiper-match-face-2 ((t (:background "yellow2" :foreground "#073642" :weight normal))))
+ '(swiper-match-face-3 ((t (:background "yellow2" :foreground "#073642" :weight normal))))
+ '(swiper-match-face-4 ((t (:background "yellow2" :foreground "#073642" :weight normal)))))
