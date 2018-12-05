@@ -103,6 +103,19 @@
   :config (setq ccls-executable "ccls")
   :hook (c-mode-common . lsp-ccls-enable))
 
+(use-package clang-format
+  :after projectile
+  :demand t
+  :preface
+  (defun clang-format-if-config ()
+    "Run clang format only if a config file is present at the root of the project"
+    (when (file-readable-p (expand-file-name ".clang-format" (projectile-project-root)))
+      (clang-format-buffer)))
+  (defun clang-format-buffer-if-config ()
+    "Add to before-save hook"
+    (add-hook 'before-save-hook 'clang-format-if-config nil t))
+  :hook (c-mode-common . clang-format-buffer-if-config))
+
 (use-package company
   :hook (prog-mode . company-mode))
 
