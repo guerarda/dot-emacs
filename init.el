@@ -12,6 +12,15 @@
 ;; No welcome page
 (setq inhibit-startup-message t)
 
+;; Initial frame position and size
+(setq initial-frame-alist
+      (append
+       '((top . 0)
+         (left . 600)
+         (width . 100)
+         (height . 80))
+       initial-frame-alist))
+
 ;; Hiding toolbars
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
