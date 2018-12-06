@@ -109,8 +109,7 @@
 (require 'use-package)
 
 (use-package ccls
-  :config (setq ccls-executable "ccls")
-  :hook (c-mode-common . lsp-ccls-enable))
+  :config (setq ccls-executable "ccls"))
 
 (use-package clang-format
   :after projectile
@@ -201,6 +200,9 @@
               ("<tab>" . ivy-alt-done))
   :config
   (ivy-mode 1))
+
+(use-package lsp
+  :hook (c-mode-common . lsp))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
