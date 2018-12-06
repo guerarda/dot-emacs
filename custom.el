@@ -12,7 +12,7 @@
  '(ivy-use-virtual-buffers t)
  '(lsp-ui-doc-enable t)
  '(lsp-ui-sideline-enable nil)
-  '(nlinum-highlight-current-line t)
+ '(nlinum-highlight-current-line t)
  '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
  '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
  '(org-capture-templates
@@ -42,11 +42,16 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   '(ccls company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+   '(shackle ccls company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
  '(sgml-basic-offset 4)
+ '(shackle-mode t)
+ '(shackle-rules
+   '((c++-mode :select nil :other nil)
+     (compilation-mode)
+     (magit-status-mode :select t :same t)))
  '(solarized-distinct-doc-face t)
  '(solarized-use-more-italic nil)
  '(swiper-goto-start-of-match nil)

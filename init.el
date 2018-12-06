@@ -284,6 +284,10 @@
   :hook (prog-mode . yas-minor-mode)
   :config (yas-load-directory "~/.emacs.d/snippets/"))
 
+(use-package shackle
+  :config
+  (shackle-mode))
+
 ;; (defun my-irony-mode-hook ()
 ;;   (define-key irony-mode-map [remap completion-at-point]
 ;;     'irony-completion-at-point-async)
