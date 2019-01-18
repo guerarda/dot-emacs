@@ -20,10 +20,10 @@
       (file+headline "~/Documents/books.org" "2018")
       "** %^{Book title}
   :PROPERTIES:
-  :Title: %\\1
-  :Author:  %^{Author}
-  :Year:    %^{Year}
-  :Started: %^t
+  :Title:    %\\1
+  :Author:   %^{Author}
+  :Year:     %^{Year}
+  :Started:  %^t
   :Finished:
   :END:" :kill-buffer t)))
  '(org-confirm-babel-evaluate nil)
