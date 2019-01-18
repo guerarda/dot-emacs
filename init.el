@@ -149,7 +149,7 @@
   (counsel-projectile-mode 1))
 
 (use-package flycheck
-  :bind ("C-c l" . flycheck-list-errors)
+  :bind-keymap ("C-c f" . flycheck-command-map)
   :hook (prog-mode . flycheck-mode)
   :config
   (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
