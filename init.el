@@ -159,6 +159,11 @@
                                              emacs-lisp)))
 
 (use-package git-gutter
+  :bind (("C-c g k" . git-gutter:revert-hunk)
+         ("C-c g n" . git-gutter:next-hunk)
+         ("C-c g p" . git-gutter:previous-hunk)
+         ("C-c g s" . git-gutter:stage-hunk)
+         ("C-c g d" . git-gutter:popup-hunk))
   :hook (prog-mode . git-gutter-mode))
 
 (use-package git-gutter-fringe
