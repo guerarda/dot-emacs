@@ -202,11 +202,19 @@
   (ivy-mode 1))
 
 (use-package lsp
+  :config
+  (setq lsp-prefer-flymake nil)
   :hook (c-mode-common . lsp))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
 
+(use-package lsp-ui-flycheck
+  :after lsp-ui
+  :demand t
+  :hook (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1))))
+
+;(add-hook 'lsp-after-open-hook (lambda () (lsp-ui-flycheck-enable 1)))
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status))
