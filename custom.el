@@ -46,6 +46,7 @@
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
+ '(projectile-use-git-grep t)
  '(sgml-basic-offset 4)
  '(shackle-mode t)
  '(shackle-rules
