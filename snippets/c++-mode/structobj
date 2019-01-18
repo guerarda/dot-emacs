@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Object Struct
+# key: structobj
+# --
+
+struct _$1 : $1 {
+    _$1() {}
+
+    $0
+};
