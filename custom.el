@@ -75,6 +75,7 @@
  '(ivy-action ((t nil)))
  '(ivy-current-match ((t (:background "#083168" :underline t))))
  '(ivy-virtual ((t (:inherit font-lock-doc-face :slant italic :weight normal))))
+ '(ledger-font-payee-cleared-face ((t (:foreground "#268bd2" :weight normal))))
  '(magit-hash ((t (:foreground "#dc322f"))))
  '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
  '(magit-log-date ((t (:foreground "#859900"))))
