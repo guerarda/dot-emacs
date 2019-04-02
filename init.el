@@ -128,13 +128,7 @@
   :hook (prog-mode . company-mode))
 
 (use-package company-lsp
-  :after company
-  :demand t
-  :config
-  (push 'company-lsp company-backends)
-  (setq-default company-transformers nil)
-  (setq-default company-lsp-async t)
-  (setq-default company-lsp-cache-candidates nil))
+  :commands company-lsp)
 
 (use-package counsel
   :after ivy
@@ -206,20 +200,18 @@
   :config
   (ivy-mode 1))
 
-(use-package lsp
+(use-package lsp-mode
+  :commands lsp
   :config
   (setq lsp-prefer-flymake nil)
   :hook (c-mode-common . lsp))
 
 (use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode))
+  :commands lsp-ui-mode)
 
 (use-package lsp-ui-flycheck
-  :after lsp-ui
-  :demand t
-  :hook (lsp-after-open . (lambda () (lsp-ui-flycheck-enable 1))))
+  :commands lsp-ui)
 
-;(add-hook 'lsp-after-open-hook (lambda () (lsp-ui-flycheck-enable 1)))
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status))
@@ -301,14 +293,6 @@
   :config
   (shackle-mode))
 
-;; (defun my-irony-mode-hook ()
-;;   (define-key irony-mode-map [remap completion-at-point]
-;;     'irony-completion-at-point-async)
-;;   (define-key irony-mode-map [remap complete-symbol]
-;;     'irony-completion-at-point-async))
-;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
 ;; (use-package cider
 ;;   :config
 ;;   (setq-default cider-show-error-buffer nil)
@@ -317,9 +301,3 @@
 ;; (use-package intero
 ;;   :config
 ;;   (add-hook 'haskell-mode-hook 'intero-mode))
-
-;; (use-package irony
-;;   :config
-;;   (add-hook 'c++-mode-hook 'irony-mode)
-;;   (add-hook 'c-mode-hook 'irony-mode)
-;;   (add-hook 'objc-mode-hook 'irony-mode))

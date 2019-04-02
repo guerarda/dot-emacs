@@ -3,14 +3,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-backends
+   '(company-lsp company-bbdb company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
+                 (company-dabbrev-code company-gtags company-etags company-keywords)
+                 company-oddmuse company-dabbrev))
  '(compilation-always-kill t)
  '(compilation-scroll-output 'first-error)
+ '(enable-recursive-minibuffers t)
+ '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)) t)
  '(ivy-use-virtual-buffers t)
+ '(lsp-enable-completion-at-point nil)
+ '(lsp-enable-links nil)
  '(lsp-ui-doc-enable t)
+ '(lsp-ui-flycheck-list-position 'right)
  '(lsp-ui-sideline-enable nil)
  '(nlinum-highlight-current-line t)
  '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
