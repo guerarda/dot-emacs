@@ -26,7 +26,7 @@
  '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
  '(org-capture-templates
    '(("b" "Add a book entry" entry
-      (file+headline "~/Documents/books.org" "2018")
+      (file+headline "~/Documents/books.org" "2019")
       "** %^{Book title}
   :PROPERTIES:
   :Title:    %\\1
