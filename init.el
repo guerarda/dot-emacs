@@ -1,7 +1,6 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -55,8 +54,6 @@
 (set-keyboard-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-
-(setq-default ispell-program-name "/usr/local/bin/aspell")
 
 ;; Searching
 (bind-key "C-s" #'isearch-forward-regexp)
@@ -159,6 +156,15 @@
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
                                              emacs-lisp)))
 
+(use-package flyspell
+  :if (executable-find "aspell")
+  :hook ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode))
+  :init
+  (setq-default ispell-program-name "aspell")
+  (setq-default ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together"))
+  (setq-default flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face)))
+
 (use-package git-gutter
   :bind (("C-c g k" . git-gutter:revert-hunk)
          ("C-c g n" . git-gutter:next-hunk)
@@ -229,7 +235,8 @@
          ("C-x 4" . magit-section-show-level-4-all))
   :config
   (delete 'Git vc-handled-backends)
-  (setq magit-completing-read-function 'ivy-completing-read))
+  (setq magit-completing-read-function 'ivy-completing-read)
+  :hook (git-commit-setup . git-commit-turn-on-flyspell))
 
 (use-package misc
   :bind ("M-z" . zap-up-to-char))
