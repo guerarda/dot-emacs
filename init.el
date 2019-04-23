@@ -125,6 +125,13 @@
   :hook (c-mode-common . clang-format-buffer-if-config))
 
 (use-package company
+  :bind ((:map company-search-map
+                ("C-t" . company-search-toggle-filtering)
+                ("C-n" . company-select-next)
+                ("C-p" . company-select-previous))
+         (:map company-active-map
+               ("C-n" . company-select-next)
+               ("C-p" . company-select-previous)))
   :hook (prog-mode . company-mode))
 
 (use-package company-lsp
