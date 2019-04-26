@@ -64,7 +64,7 @@
 (bind-key "C-x C-b" #'ibuffer)
 
 (bind-key "C-c ;" #'comment-or-uncomment-region)
-(bind-key "C-c o" #'whitespace-mode)
+(bind-key "C-c w" #'whitespace-mode)
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
@@ -100,7 +100,8 @@
         c-basic-offset 4)
   (c-set-offset 'case-label '0)
   (electric-pair-mode)
-  (bind-key "C-c C-k" #'compile c-mode-base-map))
+  (bind-key "C-c C-c" #'compile c-mode-base-map)
+  (bind-key "C-c c b" #'(lambda () (interactive) (swiper "#pragma mark"))))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 (require 'use-package)
@@ -144,7 +145,8 @@
   :after (counsel projectile)
   :demand t
   :config
-  (counsel-projectile-mode 1))
+  (counsel-projectile-mode 1)
+  (setq counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc))
 
 (use-package flycheck
   :bind-keymap ("C-c f" . flycheck-command-map)
@@ -188,13 +190,6 @@
 
 (use-package hl-line
   :config (global-hl-line-mode 1))
-
-(use-package ido
-  :disabled
-  :config
-  (ido-mode t)
-  (setq ido-everywhere t)
-  (setq ido-enable-flex-matching t))
 
 (use-package ido-vertical-mode
   :disabled
@@ -250,8 +245,10 @@
   :bind (("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
          ("M-n" . org-metadown)
-         ("C-c c" . org-capture))
-  :hook (org-mode . (lambda () (org-bullets-mode 1))))
+         ("C-c o c" . org-capture)))
+
+(use-package org-bullets-mode
+  :hook (org-mode . org-bullets-mode))
 
 (use-package paredit
   :ensure t
@@ -276,13 +273,6 @@
   :config
   (save-place-mode 1)
   (setq save-place-file (concat user-emacs-directory "places")))
-
-(use-package smex
-  :disabled
-  :ensure t
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands)
-         ("C-c C-c M-x" . execute-extended-command)))
 
 (use-package solarized-theme
   :ensure t
