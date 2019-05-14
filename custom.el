@@ -7,6 +7,8 @@
    '(company-lsp company-bbdb company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
                  (company-dabbrev-code company-gtags company-etags company-keywords)
                  company-oddmuse company-dabbrev))
+ '(company-search-regexp-function 'company-search-flex-regexp)
+ '(company-show-numbers t)
  '(compilation-always-kill t)
  '(compilation-scroll-output 'first-error)
  '(diff-font-lock-refine nil)
