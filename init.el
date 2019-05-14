@@ -222,6 +222,9 @@
   :config
   (ivy-mode 1))
 
+(use-package intero
+  :hook (haskell-mode . intero-mode))
+
 (use-package lsp-mode
   :commands lsp
   :config
@@ -318,7 +321,3 @@
 ;;   :config
 ;;   (setq-default cider-show-error-buffer nil)
 ;;   (setq-default cider-stacktrace-fill-column 80))
-
-;; (use-package intero
-;;   :config
-;;   (add-hook 'haskell-mode-hook 'intero-mode))
