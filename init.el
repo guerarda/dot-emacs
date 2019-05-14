@@ -74,35 +74,30 @@
 (bind-key* "M-2" #'split-window-vertically)
 (bind-key* "M-3" #'split-window-horizontally)
 
-;; C-a moves to first non-whitespace characted, then the real
-;; beginning of line
-(defadvice move-beginning-of-line (around smarter-bol activate)
-  ;; Move to requested line if needed
-  (let ((arg (or (ad-get-arg 0) 1)))
-    (when (/= arg 1)
-      (forward-line (1- arg))))
-  ;; Move to indentation on first call, then to actual BOL on second.
-  (let ((pos (point)))
-    (back-to-indentation)
-    (when (= pos (point))
-      ad-do-it)))
-
 (defun my-prog-mode-hook ()
   (nlinum-mode)
   (setq-default nlinum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (subword-mode 1)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace))
+  (electric-pair-mode)
+  (add-hook 'before-save-hook 'whitespace-cleanup))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
         c-basic-offset 4)
   (c-set-offset 'case-label '0)
-  (electric-pair-mode)
   (bind-key "C-c C-c" #'compile c-mode-base-map)
   (bind-key "C-c c b" #'(lambda () (interactive) (swiper "#pragma mark"))))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+(defun load-my-theme (frame)
+  (select-frame frame)
+  (load-theme 'solarized-dark t))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'load-my-theme)
+  (load-theme 'solarized-dark t))
 
 (require 'use-package)
 
@@ -121,6 +116,10 @@
     "Add to before-save hook"
     (add-hook 'before-save-hook 'clang-format-if-config nil t))
   :hook (c-mode-common . clang-format-buffer-if-config))
+
+(use-package cmake-font-lock
+  :after cmake-mode
+  :hook (cmake-mode . cmake-font-lock-activate))
 
 (use-package company
   :bind ((:map company-search-map
@@ -147,6 +146,21 @@
   :config
   (counsel-projectile-mode 1)
   (setq counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc))
+
+(use-package crux
+  :bind (("C-a" . crux-move-beginning-of-line)
+         ("C-c i" . crux-find-user-init-file)
+         ("C-c ," . crux-find-user-custom-file)
+         ("C-x C-u" . crux-upcase-region)
+         ("C-x C-l" . crux-downcase-region)
+         ("C-x M-c" . crux-capitalize-region)))
+
+(use-package doom-modeline
+  :config
+  (setq doom-modeline-minor-modes t
+        doom-modeline-buffer-modification-icon nil
+        doom-modeline-buffer-file-name-style 'relative-from-project)
+  :hook (after-init . doom-modeline-mode))
 
 (use-package flycheck
   :bind-keymap ("C-c f" . flycheck-command-map)
@@ -235,6 +249,9 @@
 
 (use-package misc
   :bind ("M-z" . zap-up-to-char))
+
+(use-package minions
+  :config (minions-mode 1))
 
 (use-package modern-cpp-font-lock
   :ensure t

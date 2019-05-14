@@ -9,13 +9,13 @@
                  company-oddmuse company-dabbrev))
  '(compilation-always-kill t)
  '(compilation-scroll-output 'first-error)
+ '(diff-font-lock-refine nil)
  '(enable-recursive-minibuffers t)
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)) t)
- '(ivy-use-virtual-buffers t)
  '(lsp-enable-completion-at-point nil)
  '(lsp-enable-links nil)
  '(lsp-ui-doc-enable t)
@@ -51,7 +51,7 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   '(rmsbolt shackle ccls company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+   '(crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle ccls company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
@@ -78,10 +78,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(doom-modeline-project-dir ((t (:inherit (font-lock-comment-face bold)))))
  '(git-gutter-fr:modified ((((class color) (background dark)) :foreground "#b58900") (((class color) (background light)) :foreground "#f2804f")))
  '(isearch ((t (:background "#eeee00" :foreground "#002b36" :weight normal))))
  '(ivy-action ((t nil)))
- '(ivy-current-match ((((class color) (background dark)) :background "#00629d") (((class color) (background light)) :background "#69b7f0")))
+ '(ivy-current-match ((((class color) (background dark)) :background "#268bd2" :foreground "#002b36") (((class color) (background light)) :background "#268bd2" :foreground "#fdf6e3")))
  '(ivy-virtual ((t (:inherit font-lock-doc-face :slant italic :weight normal))))
  '(ledger-font-payee-cleared-face ((t (:foreground "#268bd2" :weight normal))))
  '(magit-hash ((t (:foreground "#dc322f"))))
