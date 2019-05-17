@@ -1,3 +1,9 @@
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
@@ -39,7 +45,7 @@
       load-prefer-newer t
       ediff-window-setup-function 'ediff-setup-windows-plain
       backup-directory-alist `(("." . ,(concat user-emacs-directory
-					       "backups"))))
+                                               "backups"))))
 
 ;; Map 'cmd' to Meta and 'alt' to alt
 (setq-default mac-option-key-is-meta nil)
@@ -91,13 +97,13 @@
   (bind-key "C-c c b" #'(lambda () (interactive) (swiper "#pragma mark"))))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
-(defun load-my-theme (frame)
-  (select-frame frame)
-  (load-theme 'solarized-dark t))
+;; (defun load-my-theme (frame)
+;;   (select-frame frame)
+;;   (load-theme 'solarized-dark t))
 
-(if (daemonp)
-    (add-hook 'after-make-frame-functions #'load-my-theme)
-  (load-theme 'solarized-dark t))
+;; (if (daemonp)
+;;     (add-hook 'after-make-frame-functions #'load-my-theme)
+;;   (load-theme 'solarized-dark t))
 
 (require 'use-package)
 
@@ -174,8 +180,7 @@
 
 (use-package flyspell
   :if (executable-find "aspell")
-  :hook ((text-mode . flyspell-mode)
-         (prog-mode . flyspell-prog-mode))
+  :hook ((text-mode . turn-on-flyspell))
   :init
   (setq-default ispell-program-name "aspell")
   (setq-default ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together"))
@@ -211,6 +216,9 @@
   :config
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only))
+
+(use-package ispell
+  :bind ("M-%" . ispell-word))
 
 (use-package ivy
   :demand t
