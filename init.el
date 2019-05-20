@@ -53,13 +53,14 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 
-;; Always ALWAYS use UTF-8
+;; Prefer UTF-8
 (prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq-default buffer-file-coding-system 'utf-8-unix)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+;; (set-default-coding-systems 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (setq-default buffer-file-coding-system 'utf-8-unix)
 
 ;; Searching
 (bind-key "C-s" #'isearch-forward-regexp)
@@ -104,6 +105,12 @@
 ;; (if (daemonp)
 ;;     (add-hook 'after-make-frame-functions #'load-my-theme)
 ;;   (load-theme 'solarized-dark t))
+
+;; use ' instead of quote when saving customization
+(defadvice custom-save-all (around custom-save-all-around)
+  "Use abbreviated quotes for customize."
+  (let ((print-quoted t))
+    ad-do-it))
 
 (require 'use-package)
 
@@ -210,13 +217,6 @@
 (use-package hl-line
   :config (global-hl-line-mode 1))
 
-(use-package ido-vertical-mode
-  :disabled
-  :ensure t
-  :config
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-and-C-p-only))
-
 (use-package ispell
   :bind ("M-%" . ispell-word))
 
@@ -312,7 +312,7 @@
 
 (use-package swiper
   :after ivy
-  :bind ("C-s" . swiper))
+  :bind ("C-s" . swiper-isearch))
 
 (use-package uniquify
   :config (setq uniquify-buffer-name-style 'forward))

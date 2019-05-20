@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(all-the-icons-color-icons nil)
  '(company-backends
    '(company-lsp company-bbdb company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
                  (company-dabbrev-code company-gtags company-etags company-keywords)
@@ -17,7 +18,7 @@
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
  '(ivy-count-format "(%d/%d) ")
- '(ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)) t)
+ '(ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy) (t . ivy--regex-plus)) t)
  '(lsp-enable-completion-at-point nil)
  '(lsp-enable-links nil)
  '(lsp-ui-doc-enable t)
@@ -80,6 +81,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(doom-modeline-info ((t (:inherit bold))))
  '(doom-modeline-project-dir ((t (:inherit (font-lock-comment-face bold)))))
  '(git-gutter-fr:modified ((((class color) (background dark)) :foreground "#b58900") (((class color) (background light)) :foreground "#f2804f")))
  '(isearch ((t (:background "#eeee00" :foreground "#002b36" :weight normal))))
@@ -91,6 +93,10 @@
  '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
  '(magit-log-date ((t (:foreground "#859900"))))
  '(nlinum-current-line ((t (:inherit linum :foreground "#93a1a1" :weight bold))))
+ '(swiper-background-match-face-1 ((t (:inherit lazy-highlight))))
+ '(swiper-background-match-face-2 ((t (:inherit lazy-highlight))))
+ '(swiper-background-match-face-3 ((t (:inherit lazy-highlight))))
+ '(swiper-background-match-face-4 ((t (:inherit lazy-highlight))))
  '(swiper-match-face-1 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
  '(swiper-match-face-2 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
  '(swiper-match-face-3 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
