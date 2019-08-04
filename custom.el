@@ -54,7 +54,7 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   '(crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle ccls company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+   '(crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
@@ -81,6 +81,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#002b36" :foreground "#839496" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 130 :width normal :foundry "nil" :family "Menlo"))))
  '(doom-modeline-info ((t (:inherit bold))))
  '(doom-modeline-project-dir ((t (:inherit (font-lock-comment-face bold)))))
  '(git-gutter-fr:modified ((((class color) (background dark)) :foreground "#b58900") (((class color) (background light)) :foreground "#f2804f")))

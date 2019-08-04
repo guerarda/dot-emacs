@@ -71,7 +71,7 @@
 (bind-key "C-x C-b" #'ibuffer)
 
 (bind-key "C-c ;" #'comment-or-uncomment-region)
-(bind-key "C-c w" #'whitespace-mode)
+(bind-key "C-c w o" #'whitespace-mode)
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
@@ -114,9 +114,6 @@
 
 (require 'use-package)
 
-(use-package ccls
-  :config (setq ccls-executable "ccls"))
-
 (use-package clang-format
   :after projectile
   :demand t
@@ -150,7 +147,8 @@
 (use-package counsel
   :after ivy
   :demand t
-  :bind (("C-x C-f" . counsel-find-file)
+  :bind (("C-c i" . counsel-imenu)
+         ("C-x C-f" . counsel-find-file)
          ("M-x" . counsel-M-x)))
 
 (use-package counsel-projectile
@@ -161,12 +159,13 @@
   (setq counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc))
 
 (use-package crux
-  :bind (("C-a" . crux-move-beginning-of-line)
-         ("C-c i" . crux-find-user-init-file)
-         ("C-c ," . crux-find-user-custom-file)
-         ("C-x C-u" . crux-upcase-region)
-         ("C-x C-l" . crux-downcase-region)
-         ("C-x M-c" . crux-capitalize-region)))
+  :bind (([remap kill-line] . crux-smart-kill-line)
+         ("C-a" . crux-move-beginning-of-line)
+         ("C-c e c" . crux-find-user-custom-file)
+         ("C-c e i" . crux-find-user-init-file)
+         ("C-c w u" . crux-upcase-region)
+         ("C-c w l" . crux-downcase-region)
+         ("C-c w p" . crux-capitalize-region)))
 
 (use-package doom-modeline
   :config
@@ -240,7 +239,14 @@
   :hook (c-mode-common . lsp))
 
 (use-package lsp-ui
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :bind ("C-c c i" . lsp-ui-imenu)
+  :bind (:map lsp-ui-imenu-mode-map
+              ("q" . lsp-ui-imenu--kill)
+              ("n" . next-line)
+              ("p" . previous-line)
+              ("M-n" . lsp-ui-imenu--next-kind)
+              ("M-p" . lsp-ui-imenu--prev-kind)))
 
 (use-package lsp-ui-flycheck
   :commands lsp-ui)
@@ -273,7 +279,8 @@
   :bind (("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
          ("M-n" . org-metadown)
-         ("C-c o c" . org-capture)))
+         ("C-c o c" . org-capture)
+         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Documents/notes.org")))))
 
 (use-package org-bullets-mode
   :hook (org-mode . org-bullets-mode))
@@ -312,7 +319,11 @@
 
 (use-package swiper
   :after ivy
-  :bind ("C-s" . swiper-isearch))
+  :init (defun swiper-at-point ()
+          (interactive)
+          (swiper (thing-at-point 'symbol)))
+  :bind (("C-s" . swiper-isearch)
+         ("C-c s" . swiper-at-point)))
 
 (use-package uniquify
   :config (setq uniquify-buffer-name-style 'forward))
