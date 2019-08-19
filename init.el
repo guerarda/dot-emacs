@@ -70,8 +70,13 @@
 
 (bind-key "C-x C-b" #'ibuffer)
 
+(bind-key "C-c e f" #'customize-face)
+(bind-key "C-c e g" #'customize-group)
+
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (bind-key "C-c w o" #'whitespace-mode)
+(bind-key "C-c w f" #'fixup-whitespace)
+
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
@@ -80,6 +85,9 @@
 (bind-key* "M-1" #'delete-other-windows)
 (bind-key* "M-2" #'split-window-vertically)
 (bind-key* "M-3" #'split-window-horizontally)
+
+;; Major mode for .mm files is c++-mode
+(add-to-list 'auto-mode-alist '("\\.mm\\'" . c++-mode))
 
 (defun my-prog-mode-hook ()
   (nlinum-mode)
@@ -246,7 +254,9 @@
               ("n" . next-line)
               ("p" . previous-line)
               ("M-n" . lsp-ui-imenu--next-kind)
-              ("M-p" . lsp-ui-imenu--prev-kind)))
+              ("M-p" . lsp-ui-imenu--prev-kind)
+              ("<return>" . lsp-ui-imenu--visit)
+              ("M-<return>" . lsp-ui-imenu--view)))
 
 (use-package lsp-ui-flycheck
   :commands lsp-ui)
@@ -276,7 +286,8 @@
 
 (use-package org
   :ensure t
-  :bind (("C-c C-v k" . org-babel-remove-result)
+  :bind (:map org-mode-map
+         ("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
          ("M-n" . org-metadown)
          ("C-c o c" . org-capture)
