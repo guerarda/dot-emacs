@@ -94,7 +94,7 @@
   (setq-default nlinum-format "%4d\u2502")
   (setq compilation-ask-about-save nil)
   (subword-mode 1)
-  (electric-pair-mode)
+  (electric-pair-local-mode)
   (add-hook 'before-save-hook 'whitespace-cleanup))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
@@ -244,7 +244,8 @@
   :commands lsp
   :config
   (setq lsp-prefer-flymake nil)
-  :hook (c-mode-common . lsp))
+  :hook ((c-mode-common . lsp)
+         (python-mode . lsp)))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -286,12 +287,12 @@
 
 (use-package org
   :ensure t
-  :bind (:map org-mode-map
+  :bind (("C-c o c" . org-capture)
+         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Documents/notes.org"))))
+  (:map org-mode-map
          ("C-c C-v k" . org-babel-remove-result)
          ("M-p" . org-metaup)
-         ("M-n" . org-metadown)
-         ("C-c o c" . org-capture)
-         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Documents/notes.org")))))
+         ("M-n" . org-metadown)))
 
 (use-package org-bullets-mode
   :hook (org-mode . org-bullets-mode))
@@ -309,6 +310,12 @@
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (projectile-global-mode))
+
+(use-package python-black
+  :demand t
+  :after python
+  ;:hook (python-mode . python-black-on-save-mode)
+)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -351,3 +358,10 @@
 ;;   :config
 ;;   (setq-default cider-show-error-buffer nil)
 ;;   (setq-default cider-stacktrace-fill-column 80))
+
+(use-package web-mode
+  :hook (web-mode . (lambda () (electric-pair-local-mode -1)))
+  :init (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  :config
+  (setq web-mode-engines-alist
+                '(("django" . "\\.html\\'"))))

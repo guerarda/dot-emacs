@@ -13,6 +13,8 @@
  '(compilation-always-kill t)
  '(compilation-scroll-output 'first-error)
  '(diff-font-lock-refine nil)
+ '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+ '(electric-pair-mode t)
  '(enable-recursive-minibuffers t)
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(frame-resize-pixelwise t)
@@ -26,7 +28,12 @@
  '(lsp-ui-sideline-enable nil)
  '(markdown-command "pandoc")
  '(nlinum-highlight-current-line t)
- '(org-babel-load-languages '((emacs-lisp . t) (ledger . t) (awk . t) (C . t)))
+ '(org-babel-load-languages
+   '((emacs-lisp . t)
+     (ledger . t)
+     (awk . t)
+     (C . t)
+     (shell . t)))
  '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
  '(org-capture-templates
    '(("b" "Add a book entry" entry
@@ -55,7 +62,7 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(package-selected-packages
-   '(crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
+   '(htmlize web-mode python-black crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
@@ -79,6 +86,7 @@
      ("gpg" "")))
  '(projectile-sort-order 'recently-active)
  '(projectile-use-git-grep t)
+ '(python-shell-interpreter "python3")
  '(sgml-basic-offset 4)
  '(shackle-mode t)
  '(shackle-rules
