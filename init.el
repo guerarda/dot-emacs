@@ -175,6 +175,21 @@
          ("C-c w l" . crux-downcase-region)
          ("C-c w p" . crux-capitalize-region)))
 
+(use-package dired
+  :bind (:map dired-mode-map
+              ("a" . dired-jump)))
+
+(use-package dired-narrow
+  :after dired
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
+
+(use-package dired-subtree
+  :after dired
+  :bind (:map dired-mode-map
+              ("i" . dired-subtree-insert)
+              (";" . dired-subtree-remove)))
+
 (use-package doom-modeline
   :config
   (setq doom-modeline-minor-modes t
