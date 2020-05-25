@@ -76,6 +76,7 @@
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (bind-key "C-c w o" #'whitespace-mode)
 (bind-key "C-c w f" #'fixup-whitespace)
+(bind-key "C-c w r" #'fill-region)
 
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
@@ -88,6 +89,13 @@
 
 ;; Major mode for .mm files is c++-mode
 (add-to-list 'auto-mode-alist '("\\.mm\\'" . c++-mode))
+
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+(bind-key "M-Q" #'unfill-paragraph)
 
 (defun my-prog-mode-hook ()
   (nlinum-mode)
@@ -302,14 +310,20 @@
 
 (use-package org
   :ensure t
-  :bind (("C-c o c" . org-capture)
+  :bind (("C-c o a" . org-agenda)
+         ("C-c o c" . org-capture)
          ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Documents/notes.org"))))
   (:map org-mode-map
-         ("C-c C-v k" . org-babel-remove-result)
-         ("M-p" . org-metaup)
-         ("M-n" . org-metadown)))
+        ("C-c o i e" . org-emphasize)
+        ("C-c o i d" . org-insert-drawer)
+        ("C-c o i h" . org-insert-subheading)
+        ("C-c C-v k" . org-babel-remove-result)
+        ("M-p" . org-metaup)
+        ("M-n" . org-metadown))
+  :config (subword-mode 1))
 
 (use-package org-bullets-mode
+  :disabled t
   :hook (org-mode . org-bullets-mode))
 
 (use-package paredit
