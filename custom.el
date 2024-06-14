@@ -3,26 +3,26 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(all-the-icons-color-icons nil)
- '(company-backends
-   '(company-lsp company-bbdb company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
-                 (company-dabbrev-code company-gtags company-etags company-keywords)
-                 company-oddmuse company-dabbrev))
  '(company-search-regexp-function 'company-search-flex-regexp)
  '(company-show-numbers t)
+ '(company-show-quick-access t)
  '(compilation-always-kill t)
  '(compilation-scroll-output 'first-error)
+ '(consult-line-start-from-top t)
+ '(deft-auto-save-interval 0.0)
+ '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)
+ '(elfeed-search-filter "@6-months-ago -archive")
+ '(elfeed-search-remain-on-entry t)
  '(enable-recursive-minibuffers t)
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
- '(ivy-count-format "(%d/%d) ")
- '(ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy) (t . ivy--regex-plus)) t)
- '(lsp-enable-completion-at-point nil)
+ '(ispell-dictionary "en_US")
+ '(lsp-completion-enable nil)
  '(lsp-enable-links nil)
  '(lsp-enable-snippet nil)
  '(lsp-signature-auto-activate nil)
@@ -31,45 +31,51 @@
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-flycheck-list-position 'right)
  '(lsp-ui-sideline-enable nil)
+ '(magit-git-executable "git")
  '(markdown-command "pandoc")
  '(nlinum-highlight-current-line t)
- '(org-agenda-files '("~/Desktop/work.org"))
- '(org-babel-load-languages
-   '((emacs-lisp . t)
-     (ledger . t)
-     (awk . t)
-     (C . t)
-     (shell . t)))
- '(org-blank-before-new-entry '((heading) (plain-list-item . auto)))
+ '(org-agenda-files '("~/Desktop/org"))
+ '(org-babel-load-languages '((emacs-lisp . t) (awk . t) (C . t) (shell . t)))
+ '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-capture-templates
    '(("b" "Add a book entry" entry
       (file+headline "~/Documents/books.org" "2019")
-      "** %^{Book title}
-  :PROPERTIES:
-  :Title:    %\\1
-  :Author:   %^{Author}
-  :Year:     %^{Year}
-  :Started:  %^t
-  :Finished:
-  :END:" :kill-buffer t)))
+      "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^t\12:Finished:\12:END:" :kill-buffer t)
+     ("t" "Add a TODO entry" entry
+      (file "~/Desktop/org/todo.org")
+      "* TODO %^{Title}\12:PROPERTIES:\12:CREATED: %U\12:END:\12%?" :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t :prepend t)
+     ("n" "Add a note entry" entry
+      (file "~/Desktop/org/notes.org")
+      "* %^{Title}\12:PROPERTIES:\12:CREATED: %U\12:END:\12%?" :empty-lines-after 1 :prepend t)))
  '(org-confirm-babel-evaluate nil)
- '(org-fontify-done-headline nil)
  '(org-fontify-whole-heading-line nil)
  '(org-hide-leading-stars t)
+ '(org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+ '(org-journal-date-format "%A, %B %e %Y")
+ '(org-journal-dir "~/Desktop/org/")
+ '(org-journal-file-format "%Y-%m-%d.org")
+ '(org-journal-file-header "#+title: ")
+ '(org-journal-file-type 'yearly)
+ '(org-outline-path-complete-in-steps nil)
+ '(org-refile-targets '((org-agenda-files :maxlevel . 3)))
+ '(org-refile-use-outline-path 'file)
+ '(org-reverse-note-order t)
+ '(org-roam-capture-templates
+   '(("d" "default" plain "%?" :target
+      (file+head "${slug}.org" "#+title: ${title}\12")
+      :unnarrowed t)))
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation t)
  '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
-   '(("TODO" . "#dc322f")
-     ("PROGRESS" . "#b58900")
-     ("WAITING" . "#cb4b16")
-     ("REVIEW" . "#6c71c4")
-     ("CANCELLED" . "#2aa198")
-     ("DONE" . "#2aa198")))
+   '(("TODO" . "red")
+     ("PROGRESS" . "orange")
+     ("WAITING" . "violet")
+     ("REVIEW" . "medium purple")
+     ("CANCELLED" . "pale green")
+     ("DONE" . "dark green")))
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
- '(package-selected-packages
-   '(dired-narrow dired-subtree htmlize web-mode python-black crux all-the-icons doom-modeline minions cmake-font-lock leuven-theme rmsbolt shackle company-lsp lsp-mode lsp-ui counsel-projectile projectile clang-format flx counsel yaml-mode exec-path-from-shell yasnippet flycheck magit cmake-mode uniquify git-gutter-fringe php-mode modern-cpp-font-lock nlinum use-package solarized-theme smex rainbow-delimiters paredit org-bullets magit-svn ledger-mode irony intero ido-vertical-mode glsl-mode cider))
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache"))
  '(projectile-globally-ignored-files '("TAGS"))
@@ -91,10 +97,14 @@
      (nil "lock" "gpg")
      ("lock" "")
      ("gpg" "")))
+ '(projectile-project-root-files-bottom-up
+   '(".projectile" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs"))
  '(projectile-sort-order 'recently-active)
- '(projectile-use-git-grep t)
+ '(projectile-use-git-grep nil)
  '(python-shell-interpreter "python3")
- '(sentence-end-double-space nil)
+ '(reb-re-syntax 'string)
+ '(rg-keymap-prefix "\3r")
+  '(sentence-end-double-space nil)
  '(sgml-basic-offset 4)
  '(shackle-mode t)
  '(shackle-rules
@@ -112,33 +122,9 @@
    '(not xref-find-definitions xref-find-definitions-other-window xref-find-definitions-other-frame xref-find-references))
  '(yas-global-mode t))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#002b36" :foreground "#839496" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "outline" :family "SF Mono"))))
- '(doom-modeline-info ((t (:inherit bold))))
- '(doom-modeline-project-dir ((t (:inherit (font-lock-comment-face bold)))))
- '(git-gutter-fr:modified ((((class color) (background dark)) :foreground "#b58900") (((class color) (background light)) :foreground "#f2804f")))
- '(isearch ((t (:background "#eeee00" :foreground "#002b36" :weight normal))))
- '(ivy-action ((t nil)))
- '(ivy-current-match ((((class color) (background dark)) :background "#268bd2" :foreground "#002b36") (((class color) (background light)) :background "#268bd2" :foreground "#fdf6e3")))
- '(ivy-virtual ((t (:inherit font-lock-doc-face :slant italic :weight normal))))
- '(ledger-font-payee-cleared-face ((t (:foreground "#268bd2" :weight normal))))
- '(magit-hash ((t (:foreground "#dc322f"))))
- '(magit-log-author ((t (:foreground "#6c71c4" :weight bold))))
- '(magit-log-date ((t (:foreground "#859900"))))
- '(nlinum-current-line ((t (:inherit linum :foreground "#93a1a1" :weight bold))))
- '(org-level-1 ((t (:height 1.0 :inherit default :foreground "#cb4b16"))))
- '(org-level-2 ((t (:height 1.0 :inherit default :foreground "#859900"))))
- '(org-level-3 ((t (:height 1.0 :inherit default :foreground "#268bd2"))))
- '(org-level-4 ((t (:height 1.0 :inherit default :foreground "#b58900"))))
- '(swiper-background-match-face-1 ((t (:inherit lazy-highlight))))
- '(swiper-background-match-face-2 ((t (:inherit lazy-highlight))))
- '(swiper-background-match-face-3 ((t (:inherit lazy-highlight))))
- '(swiper-background-match-face-4 ((t (:inherit lazy-highlight))))
- '(swiper-match-face-1 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
- '(swiper-match-face-2 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
- '(swiper-match-face-3 ((t (:inherit isearch :foreground "#002b36" :weight normal))))
- '(swiper-match-face-4 ((t (:inherit isearch :foreground "#002b36" :weight normal)))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:inherit nil :extend nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 200 :width normal :foundry "outline" :family "Source Code Pro")))))

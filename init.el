@@ -1,30 +1,36 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;; Straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+;; use-package
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
-
-;; Ensure environment variables look the same as in the shell
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
 
 ;; No welcome page
 (setq inhibit-startup-message t)
 
-;; Initial frame position and size
-(setq initial-frame-alist
-      (append
-       '((top . 0)
-         (left . 600)
-         (width . 100)
-         (height . 80))
-       initial-frame-alist))
+;;Scratch buffer configuration
+(setq initial-major-mode 'org-mode)
+(setq initial-scratch-message "\
+# This buffer is for notes you don't want to save.
+# If you want to create a file, visit that file with C-x C-f,
+# then enter the text in that file's own buffer.")
 
 ;; Hiding toolbars
 (tool-bar-mode -1)
@@ -57,28 +63,14 @@
 (prefer-coding-system 'utf-8)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;; (set-default-coding-systems 'utf-8)
-;; (set-terminal-coding-system 'utf-8)
-;; (set-keyboard-coding-system 'utf-8)
-;; (setq-default buffer-file-coding-system 'utf-8-unix)
-
-;; Searching
-(bind-key "C-s" #'isearch-forward-regexp)
-(bind-key "C-r" #'isearch-backward-regexp)
-(bind-key "C-M-s" #'isearch-forward)
-(bind-key "C-M-r" #'isearch-backward)
-
-(bind-key "C-x C-b" #'ibuffer)
+(bind-key "C-." #'execute-extended-command)
 
 (bind-key "C-c e f" #'customize-face)
 (bind-key "C-c e g" #'customize-group)
-
 (bind-key "C-c ;" #'comment-or-uncomment-region)
 (bind-key "C-c w o" #'whitespace-mode)
 (bind-key "C-c w f" #'fixup-whitespace)
 (bind-key "C-c w r" #'fill-region)
-
-(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Splitting windows
 (bind-key* "M-o" #'other-window)
@@ -87,8 +79,17 @@
 (bind-key* "M-2" #'split-window-vertically)
 (bind-key* "M-3" #'split-window-horizontally)
 
-;; Major mode for .mm files is c++-mode
-(add-to-list 'auto-mode-alist '("\\.mm\\'" . c++-mode))
+;; use ' instead of quote when saving customization
+(defadvice custom-save-all (around custom-save-all-around)
+  "Use abbreviated quotes for customize."
+  (let ((print-quoted t))
+    ad-do-it))
+
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 (defun unfill-paragraph ()
   "Takes a multi-line paragraph and makes it into a single line of text."
@@ -98,12 +99,10 @@
 (bind-key "M-Q" #'unfill-paragraph)
 
 (defun my-prog-mode-hook ()
-  (nlinum-mode)
-  (setq-default nlinum-format "%4d\u2502")
+  (display-line-numbers-mode)
   (setq compilation-ask-about-save nil)
   (subword-mode 1)
-  (electric-pair-local-mode)
-  (add-hook 'before-save-hook 'whitespace-cleanup))
+  (electric-pair-local-mode))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
 (defun my-c-mode-hook ()
@@ -114,35 +113,17 @@
   (bind-key "C-c c b" #'(lambda () (interactive) (swiper "#pragma mark"))))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
-;; (defun load-my-theme (frame)
-;;   (select-frame frame)
-;;   (load-theme 'solarized-dark t))
+(defun my-js-mode-hook ()
+  (setq indent-tabs-mode t
+        js-indent-level 4
+        tab-width 4)
+  (hs-minor-mode))
+(add-hook 'js-mode-hook 'my-js-mode-hook)
 
-;; (if (daemonp)
-;;     (add-hook 'after-make-frame-functions #'load-my-theme)
-;;   (load-theme 'solarized-dark t))
+;; Copy buffer file name to kill ring
+(bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
-;; use ' instead of quote when saving customization
-(defadvice custom-save-all (around custom-save-all-around)
-  "Use abbreviated quotes for customize."
-  (let ((print-quoted t))
-    ad-do-it))
-
-(require 'use-package)
-
-(use-package clang-format
-  :after projectile
-  :demand t
-  :preface
-  (defun clang-format-if-config ()
-    "Run clang format only if a config file is present at the root of the project"
-    (when (file-readable-p (expand-file-name ".clang-format" (projectile-project-root)))
-      (clang-format-buffer)))
-  (defun clang-format-buffer-if-config ()
-    "Add to before-save hook"
-    (add-hook 'before-save-hook 'clang-format-if-config nil t))
-  :hook (c-mode-common . clang-format-buffer-if-config))
-
+;;Packages
 (use-package cmake-font-lock
   :after cmake-mode
   :hook (cmake-mode . cmake-font-lock-activate))
@@ -157,22 +138,39 @@
                ("C-p" . company-select-previous)))
   :hook (prog-mode . company-mode))
 
-(use-package company-lsp
-  :commands company-lsp)
-
-(use-package counsel
-  :after ivy
+(use-package consult
   :demand t
-  :bind (("C-c i" . counsel-imenu)
-         ("C-x C-f" . counsel-find-file)
-         ("M-x" . counsel-M-x)))
+  :bind (("C-s" . consult-line)
+         ("C-x b" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("C-x f" . consult-recent-file)
+         ("C-x r b" . consult-bookmark)
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g g" . consult-goto-line)
+         ("M-y" . consult-yank-pop)
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)
+         ("C-M-#" . consult-register)
+         ("M-s i" . consult-info)
+         ([remap Info-search] . consult-info)
+         (:map search-map
+               (("f" . consult-fd)
+                ("r" . consult-ripgrep)
+                ("l" . consult-line)
+                ("L" . consult-line-multi)
+                ("k" . consult-keep-lines)
+                ("u" . consult-focus-lines)))
+         (:map minibuffer-local-map
+               ("M-s" . consult-history)
+               ("M-r" . consult-history))))
 
-(use-package counsel-projectile
-  :after (counsel projectile)
-  :demand t
-  :config
-  (counsel-projectile-mode 1)
-  (setq counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc))
+(use-package consult-dir
+  :after consult
+  :bind (("C-x C-d" . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
 
 (use-package crux
   :bind (([remap kill-line] . crux-smart-kill-line)
@@ -183,7 +181,29 @@
          ("C-c w l" . crux-downcase-region)
          ("C-c w p" . crux-capitalize-region)))
 
+(use-package deft
+  :after org
+  :init
+  (defun cm/deft-parse-title (file contents)
+    "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+      (if begin
+          (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+        (deft-base-filename file))))
+  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
+  :bind ("C-c n d" . deft)
+  :custom
+  ;; (deft-strip-summary-regexp "\\`\\(.+\n\\)+\n")
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory "~/Desktop/org/"))
+
 (use-package dired
+  :straight (:type built-in)
   :bind (:map dired-mode-map
               ("a" . dired-jump)))
 
@@ -196,7 +216,7 @@
   :after dired
   :bind (:map dired-mode-map
               ("i" . dired-subtree-insert)
-              (";" . dired-subtree-remove)))
+              ("M-i" . dired-subtree-remove)))
 
 (use-package doom-modeline
   :config
@@ -205,88 +225,96 @@
         doom-modeline-buffer-file-name-style 'relative-from-project)
   :hook (after-init . doom-modeline-mode))
 
-(use-package flycheck
-  :bind-keymap ("C-c f" . flycheck-command-map)
-  :hook (prog-mode . flycheck-mode)
+(use-package doom-themes
   :config
-  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-    [0 0 0 0 0 4 12 28 60 124 252 124 60 28 12 4 0 0 0 0])
-  (setq-default flycheck-indication-mode 'right-fringe)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc
-                                             emacs-lisp)))
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
-(use-package flyspell
-  :if (executable-find "aspell")
-  :hook ((text-mode . turn-on-flyspell))
+(use-package emacs
+  :config
+  (setq truncate-lines t))
+
+(use-package embark
+  :bind (("C-;" . embark-act)
+         ("M-." . enbark-dwim)))
+
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package exec-path-from-shell
+  ;; Ensure environment variables look the same as in the shell
   :init
-  (setq-default ispell-program-name "aspell")
-  (setq-default ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together"))
-  (setq-default flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face)))
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
-(use-package git-gutter
-  :bind (("C-c g k" . git-gutter:revert-hunk)
-         ("C-c g n" . git-gutter:next-hunk)
-         ("C-c g p" . git-gutter:previous-hunk)
-         ("C-c g s" . git-gutter:stage-hunk)
-         ("C-c g d" . git-gutter:popup-hunk))
-  :hook (prog-mode . git-gutter-mode))
+(use-package fd-dired
+  :bind (("C-c s f" . fd-dired)))
 
-(use-package git-gutter-fringe
-  :config
-  (setq-default fringes-outside-margins t)
-  (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-    "X......."
-    "XX......"
-    "XXX....."
-    "XXXX...."))
+;; (use-package flyspell
+;;   :hook ((text-mode . turn-on-flyspell))
+;;   :init
+;;   (setq ispell-program-name "hunspell")
+;;   (setq ispell-hunspell-dict-paths-alist
+;;         '(("en_US" "C:/Users/aguerard/.hunspell/en_US.aff")))
+;;   (setq ispell-local-dictionary "en_US")
+;;   (setq ispell-local-dictionary-alist
+;;         ;; Please note the list `("-d" "en_US")` contains ACTUAL parameters passed to hunspell
+;;         ;; You could use `("-d" "en_US,en_US-med")` to check with multiple dictionaries
+;;         '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+;;   :bind ("M-i" . flyspell-auto-correct-word)
+;;   :config
+;;   (unbind-key "C-." flyspell-mode-map))
+
+
+(use-package helpful
+  :bind (("C-h f" . helpful-callable)
+         ("C-h k" . helpful-key)
+         ("C-h v" . helpful-variable)
+         ("C-c C-d" . helpful-at-point)))
+
+(use-package hideshow
+  :straight (:type built-in)
+  :bind ("<backtab>" . hs-cycle)
+  :init
+  (defun hs-cycle (&optional level)
+  (interactive "p")
+  (let (message-log-max
+        (inhibit-message t))
+    (if (= level 1)
+        (pcase last-command
+          ('hs-cycle
+           (hs-hide-level 1)
+           (setq this-command 'hs-cycle-children))
+          ('hs-cycle-children
+           ;; TODO: Fix this case. `hs-show-block' needs to be
+           ;; called twice to open all folds of the parent
+           ;; block.
+           (save-excursion (hs-show-block))
+           (hs-show-block)
+           (setq this-command 'hs-cycle-subtree))
+          ('hs-cycle-subtree
+           (hs-hide-block))
+          (_
+           (if (not (hs-already-hidden-p))
+               (hs-hide-block)
+             (hs-hide-level 1)
+             (setq this-command 'hs-cycle-children))))
+      (hs-hide-level level)
+      (setq this-command 'hs-hide-level)))))
 
 (use-package hl-line
   :config (global-hl-line-mode 1))
 
+
 (use-package ispell
   :bind ("M-%" . ispell-word))
 
-(use-package ivy
-  :demand t
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window)
-         ("M-H" . ivy-resume))
-  :bind (:map ivy-minibuffer-map
-              ("<tab>" . ivy-alt-done))
-  :config
-  (ivy-mode 1))
-
-(use-package intero
-  :hook (haskell-mode . intero-mode))
-
-(use-package lsp-mode
-  :commands lsp
-  :config
-  (setq lsp-prefer-flymake nil)
-  :hook ((c-mode-common . lsp)
-         (python-mode . lsp)))
-
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :bind ("C-c c i" . lsp-ui-imenu)
-  :bind (:map lsp-ui-imenu-mode-map
-              ("q" . lsp-ui-imenu--kill)
-              ("n" . next-line)
-              ("p" . previous-line)
-              ("M-n" . lsp-ui-imenu--next-kind)
-              ("M-p" . lsp-ui-imenu--prev-kind)
-              ("<return>" . lsp-ui-imenu--visit)
-              ("M-<return>" . lsp-ui-imenu--view)))
-
-(use-package lsp-ui-flycheck
-  :commands lsp-ui)
-
 (use-package magit
-  :ensure t
   :bind (("C-x g" . magit-status))
   :bind (:map magit-mode-map
          ("C-x 1" . magit-section-show-level-1-all)
@@ -298,36 +326,76 @@
   (setq magit-completing-read-function 'ivy-completing-read)
   :hook (git-commit-setup . git-commit-turn-on-flyspell))
 
-(use-package misc
-  :bind ("M-z" . zap-up-to-char))
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotator-light nil))
+ :init
+ (marginalia-mode))
 
-(use-package minions
-  :config (minions-mode 1))
+(use-package markdown-mode)
 
 (use-package modern-cpp-font-lock
-  :ensure t
   :hook (c++-mode . modern-c++-font-lock-mode))
 
+(use-package orderless
+  :init
+    (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
 (use-package org
-  :ensure t
+  :after consult
   :bind (("C-c o a" . org-agenda)
          ("C-c o c" . org-capture)
-         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Documents/notes.org"))))
+         ("C-c o l" . org-store-link)
+         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/notes.org")))
+         ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org"))))
   (:map org-mode-map
-        ("C-c o i e" . org-emphasize)
+        ("C-c C-." . org-time-stamp-inactive)
+        ("C-c o e" . org-emphasize)
         ("C-c o i d" . org-insert-drawer)
-        ("C-c o i h" . org-insert-subheading)
+        ("C-c o i s" . org-insert-subheading)
+        ("C-c o i h" . org-insert-heading)
+                ("C-c o o" . consult-org-heading)
         ("C-c C-v k" . org-babel-remove-result)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
-  :config (subword-mode 1))
+  :custom
+  (org-startup-indented t)
+  :config
+  (subword-mode 1)
+  (setq org-agenda-files '("~/Desktop/org")))
 
 (use-package org-bullets-mode
   :disabled t
   :hook (org-mode . org-bullets-mode))
 
+(use-package org-journal
+  :preface
+  (defun org-journal-file-header-func (time)
+  "Custom function to create journal header."
+  (concat
+    (pcase org-journal-file-type
+      (`daily (format-time-string "#+TITLE: %A, %e %B %Y\n#+STARTUP: showeverything\n"))
+      (`weekly (format-time-string "#+TITLE: Week %W %Y\n#+STARTUP: folded\n"))
+      (`monthly (format-time-string "#+TITLE: %B %Y\n#+STARTUP: folded\n") )
+      (`yearly (format-time-string "#+TITLE: %Y Yearly Journal\n#+STARTUP: folded\n")))))
+  :bind (("C-c o j o" . org-journal-open-current-journal-file)
+         ("C-c o j n" . org-journal-new-entry))
+  :config (setq org-journal-file-header 'org-journal-file-header-func))
+
+(use-package outline
+  :after consult
+  :bind (:map outline-mode-map
+              ("C-c o o" . consult-outline)))
+
+(use-package p4
+  :bind (("C-x p e" . p4-edit)
+         ("C-x p d" . p4-diff)
+         ("C-x p =" . p4-diff2)))
+
 (use-package paredit
-  :ensure t
   :hook ((clojure-mode . paredit-mode)
          (lisp-mode . paredit-mode)
          (emacs-lisp-mode . paredit-mode)))
@@ -335,62 +403,41 @@
 (use-package paren
   :config (show-paren-mode 1))
 
-(use-package projectile
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :config
-  (projectile-global-mode))
-
-(use-package python-black
-  :demand t
-  :after python
-  ;:hook (python-mode . python-black-on-save-mode)
-)
-
 (use-package rainbow-delimiters
-  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package recentf
+  :config
+  (recentf-mode 1))
+
+(use-package rg
+  :bind (("C-c s r" . rg-menu)
+         ("C-c s d" . rg-dwim))
+  :init
+  (transient-insert-suffix 'rg-menu "-n" '(1 "-l" "Filenames only" "--files-with-matches"))
+  (rg-define-toggle "--files-with-matches" "F" nil)
+  (rg-define-toggle "--sort path" "s" nil)
+  :config
+  (setq rg-custom-type-aliases
+        '(("bff" . "*.bff")))
+  :custom (rg-executable "rg"))
+
 (use-package saveplace
-  :ensure t
   :config
   (save-place-mode 1)
   (setq save-place-file (concat user-emacs-directory "places")))
 
-(use-package solarized-theme
-  :ensure t
-  :config
-  (setq solarized-use-variable-pitch nil
-        solarized-distinct-fring-background t
-        solarized-high-contrast-mode-line t)
-  (load-theme 'solarized-dark t))
-
-(use-package swiper
-  :after ivy
-  :init (defun swiper-at-point ()
-          (interactive)
-          (swiper (thing-at-point 'symbol)))
-  :bind (("C-s" . swiper-isearch)
-         ("C-c s" . swiper-at-point)))
+(use-package simple
+  :straight (:type built-in)
+  :bind* (("M-l" . downcase-dwim)
+          ("M-u" . upcase-dwim)
+          ("M-c" . capitalize-dwim)))
 
 (use-package uniquify
+  :straight (:type built-in)
   :config (setq uniquify-buffer-name-style 'forward))
 
-(use-package yasnippet
-  :hook (prog-mode . yas-minor-mode)
-  :config (yas-load-directory "~/.emacs.d/snippets/"))
-
-(use-package shackle
-  :config
-  (shackle-mode))
-
-;; (use-package cider
-;;   :config
-;;   (setq-default cider-show-error-buffer nil)
-;;   (setq-default cider-stacktrace-fill-column 80))
-
-(use-package web-mode
-  :hook (web-mode . (lambda () (electric-pair-local-mode -1)))
-  :init (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  :config
-  (setq web-mode-engines-alist
-                '(("django" . "\\.html\\'"))))
+(use-package vertico
+  :init
+  (vertico-mode)
+  (setq vertico-count 20))
