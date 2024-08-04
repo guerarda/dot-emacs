@@ -136,7 +136,17 @@
          (:map company-active-map
                ("C-n" . company-select-next)
                ("C-p" . company-select-previous)))
-  :hook (prog-mode . company-mode))
+  :hook (prog-mode . company-mode)
+  :custom
+  (company-search-regexp-function 'company-search-flex-regexp)
+  (company-show-numbers t)
+  (company-show-quick-access t)
+)
+
+(use-package compile
+  :custom
+  ((compilation-always-kill t)
+   (compilation-scroll-output 'first-error)))
 
 (use-package consult
   :demand t
@@ -163,7 +173,9 @@
                 ("u" . consult-focus-lines)))
          (:map minibuffer-local-map
                ("M-s" . consult-history)
-               ("M-r" . consult-history))))
+               ("M-r" . consult-history)))
+  :custom
+  (consult-line-start-from-top t))
 
 (use-package consult-dir
   :after consult
@@ -234,13 +246,18 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
+(use-package eglot
+  :hook
+  (python-mode . eglot-ensure))
+
+
 (use-package emacs
   :config
   (setq truncate-lines t))
 
 (use-package embark
   :bind (("C-;" . embark-act)
-         ("M-." . enbark-dwim)))
+         ("M-." . embark-dwim)))
 
 (use-package embark-consult
   :hook
