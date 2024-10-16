@@ -34,6 +34,7 @@
 
 ;; Hiding toolbars
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 (horizontal-scroll-bar-mode -1)
 
@@ -124,24 +125,19 @@
 (bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
 ;;Packages
+(use-package ansi-color
+    :hook (compilation-filter . ansi-color-compilation-filter))
+
+(use-package beancount-mode
+  :straight (beancount-mode :type git :host github :repo "beancount/beancount-mode")
+  :hook ((beancount-mode . (lambda () (electric-indent-local-mode -1)))
+         (beancount-mode . outline-minor-mode)) )
+
+(use-package cape)
+
 (use-package cmake-font-lock
   :after cmake-mode
   :hook (cmake-mode . cmake-font-lock-activate))
-
-(use-package company
-  :bind ((:map company-search-map
-                ("C-t" . company-search-toggle-filtering)
-                ("C-n" . company-select-next)
-                ("C-p" . company-select-previous))
-         (:map company-active-map
-               ("C-n" . company-select-next)
-               ("C-p" . company-select-previous)))
-  :hook (prog-mode . company-mode)
-  :custom
-  (company-search-regexp-function 'company-search-flex-regexp)
-  (company-show-numbers t)
-  (company-show-quick-access t)
-)
 
 (use-package compile
   :custom
@@ -154,6 +150,7 @@
          ("C-x b" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x f" . consult-recent-file)
+         ("C-x p b" . consult-project-buffer)
          ("C-x r b" . consult-bookmark)
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
@@ -163,6 +160,7 @@
          ("M-'" . consult-register-store)
          ("C-M-#" . consult-register)
          ("M-s i" . consult-info)
+         ("M-g i" . consult-imenu)
          ([remap Info-search] . consult-info)
          (:map search-map
                (("f" . consult-fd)
@@ -183,6 +181,17 @@
          :map vertico-map
          ("C-x C-d" . consult-dir)
          ("C-x C-j" . consult-dir-jump-file)))
+
+(use-package corfu
+  :after cape
+  :bind (:map corfu-map
+              ("C-SPC" . corfu-insert-separator))
+  :custom
+  (corfu-auto t)
+  (corfu-separator ?\s)
+  :init
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+  (global-corfu-mode))
 
 (use-package crux
   :bind (([remap kill-line] . crux-smart-kill-line)
@@ -248,10 +257,11 @@
 
 (use-package eglot
   :hook
-  (python-mode . eglot-ensure))
-
+  (python-ts-mode . eglot-ensure))
 
 (use-package emacs
+  :custom
+  (tab-always-indent 'complete)
   :config
   (setq truncate-lines t))
 
@@ -266,6 +276,8 @@
 (use-package exec-path-from-shell
   ;; Ensure environment variables look the same as in the shell
   :init
+  (when (daemonp)
+    (exec-path-from-shell-initialize))
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
@@ -327,20 +339,20 @@
 (use-package hl-line
   :config (global-hl-line-mode 1))
 
-
 (use-package ispell
   :bind ("M-%" . ispell-word))
+
+(use-package llvm-ts-mode)
 
 (use-package magit
   :bind (("C-x g" . magit-status))
   :bind (:map magit-mode-map
-         ("C-x 1" . magit-section-show-level-1-all)
-         ("C-x 2" . magit-section-show-level-2-all)
-         ("C-x 3" . magit-section-show-level-3-all)
-         ("C-x 4" . magit-section-show-level-4-all))
+              ("C-x 1" . magit-section-show-level-1-all)
+              ("C-x 2" . magit-section-show-level-2-all)
+              ("C-x 3" . magit-section-show-level-3-all)
+              ("C-x 4" . magit-section-show-level-4-all))
   :config
   (delete 'Git vc-handled-backends)
-  (setq magit-completing-read-function 'ivy-completing-read)
   :hook (git-commit-setup . git-commit-turn-on-flyspell))
 
 (use-package marginalia
@@ -407,6 +419,17 @@
   :bind (:map outline-mode-map
               ("C-c o o" . consult-outline)))
 
+(use-package nerd-icons-completion
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+(use-package nerd-icons-corfu
+  :after corfu
+  :init
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
 (use-package p4
   :bind (("C-x p e" . p4-edit)
          ("C-x p d" . p4-diff)
@@ -419,6 +442,10 @@
 
 (use-package paren
   :config (show-paren-mode 1))
+
+(use-package python-black
+  :after python
+  :hook (python-ts-mode . python-black-on-save-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -450,6 +477,30 @@
           ("M-u" . upcase-dwim)
           ("M-c" . capitalize-dwim)))
 
+(use-package tempel
+  :init
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      (remq #'tempel-expand completion-at-point-functions))))
+
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+  (add-hook 'eglot-managed-mode-hook 'tempel-setup-capf)
+  :custom (tempel-path "~/.emacs.d/tempel-templates.eld")
+  :bind (:map tempel-map
+              ("TAB" . tempel-next)
+              ("S-TAB" . tempel-previous)))
+
 (use-package uniquify
   :straight (:type built-in)
   :config (setq uniquify-buffer-name-style 'forward))
@@ -458,3 +509,6 @@
   :init
   (vertico-mode)
   (setq vertico-count 20))
+
+(use-package wat-ts-mode)
+

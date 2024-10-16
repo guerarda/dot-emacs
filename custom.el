@@ -3,9 +3,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-   '(deft-auto-save-interval 0.0)
+ '(deft-auto-save-interval 0.0)
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
+ '(dired-dwim-target t)
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)
@@ -16,15 +17,23 @@
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
  '(ispell-dictionary "en_US")
+ '(list-matching-lines-default-context-lines 2)
+ '(llvm-ts-mode-indent-level 4)
  '(magit-git-executable "git")
+ '(major-mode-remap-alist '((python-mode . python-ts-mode)))
  '(markdown-command "pandoc")
  '(nlinum-highlight-current-line t)
  '(org-agenda-files '("~/Desktop/org"))
- '(org-babel-load-languages '((emacs-lisp . t) (awk . t) (C . t) (shell . t)))
+ '(org-babel-load-languages
+   '((emacs-lisp . t)
+     (awk . t)
+     (C . t)
+     (shell . t)
+     (python \.t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-capture-templates
    '(("b" "Add a book entry" entry
-      (file+headline "~/Documents/books.org" "2024")
+      (file+headline "~/Desktop/org/books.org" "2024")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^t\12:Finished:\12:END:" :kill-buffer t)
      ("t" "Add a TODO entry" entry
       (file "~/Desktop/org/todo.org")
@@ -65,7 +74,8 @@
  '(reb-re-syntax 'string)
  '(rg-keymap-prefix "\3r")
  '(sentence-end-double-space nil)
-  '(visible-bell nil)
+ '(visible-bell nil)
+ '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)
  '(whitespace-style
    '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab))
@@ -79,3 +89,9 @@
 ;;  ;; Your init file should contain only one such instance.
 ;;  ;; If there is more than one, they won't work right.
 ;;  '(default ((t (:inherit nil :extend nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 200 :width normal :foundry "outline" :family "Source Code Pro")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
