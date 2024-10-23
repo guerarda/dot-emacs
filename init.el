@@ -223,6 +223,10 @@
   (deft-default-extension "org")
   (deft-directory "~/Desktop/org/"))
 
+(use-package diff-hl
+  :init
+  (global-diff-hl-mode))
+
 (use-package dired
   :straight (:type built-in)
   :bind (:map dired-mode-map
@@ -284,20 +288,11 @@
 (use-package fd-dired
   :bind (("C-c s f" . fd-dired)))
 
-;; (use-package flyspell
-;;   :hook ((text-mode . turn-on-flyspell))
-;;   :init
-;;   (setq ispell-program-name "hunspell")
-;;   (setq ispell-hunspell-dict-paths-alist
-;;         '(("en_US" "C:/Users/aguerard/.hunspell/en_US.aff")))
-;;   (setq ispell-local-dictionary "en_US")
-;;   (setq ispell-local-dictionary-alist
-;;         ;; Please note the list `("-d" "en_US")` contains ACTUAL parameters passed to hunspell
-;;         ;; You could use `("-d" "en_US,en_US-med")` to check with multiple dictionaries
-;;         '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-;;   :bind ("M-i" . flyspell-auto-correct-word)
-;;   :config
-;;   (unbind-key "C-." flyspell-mode-map))
+(use-package flyspell
+  :hook ((text-mode . turn-on-flyspell))
+  :bind ("M-i" . flyspell-auto-correct-word)
+  :config
+  (unbind-key "C-." flyspell-mode-map))
 
 
 (use-package helpful
@@ -444,8 +439,7 @@
   :config (show-paren-mode 1))
 
 (use-package python-black
-  :after python
-  :hook (python-ts-mode . python-black-on-save-mode))
+  :after python)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
