@@ -121,6 +121,33 @@
   (hs-minor-mode))
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
+(defun my-keyboard-quit-dwim ()
+  "Do-What-I-Mean behaviour for a general `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it.
+
+The DWIM behaviour of this command is as follows:
+
+- When the region is active, disable it.
+- When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
+- In every other case use the regular `keyboard-quit'."
+  (interactive)
+  (cond
+   ((region-active-p)
+    (keyboard-quit))
+   ((derived-mode-p 'completion-list-mode)
+    (delete-completion-window))
+   ((> (minibuffer-depth) 0)
+    (abort-recursive-edit))
+   (t
+    (keyboard-quit))))
+
+(bind-key "C-g" #'my-keyboard-quit-dwim)
+
+
 ;; Copy buffer file name to kill ring
 (bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
@@ -223,6 +250,10 @@
   (deft-default-extension "org")
   (deft-directory "~/Desktop/org/"))
 
+(use-package delsel
+  :straight (:type built-in)
+  :hook (after-init . delete-selection-mode))
+
 (use-package diff-hl
   :init
   (global-diff-hl-mode))
@@ -240,8 +271,10 @@
 (use-package dired-subtree
   :after dired
   :bind (:map dired-mode-map
-              ("i" . dired-subtree-insert)
-              ("M-i" . dired-subtree-remove)))
+              ("<tab>" . dired-subtree-toggle)
+              ("TAB" . dired-subtree-toggle)
+              ("<backtab>" . dired-subtree-remove)
+              ("S-TAB" . dired-subtree-remove)))
 
 (use-package doom-modeline
   :config
@@ -414,6 +447,8 @@
   :bind (:map outline-mode-map
               ("C-c o o" . consult-outline)))
 
+(use-package nerd-icons)
+
 (use-package nerd-icons-completion
   :after marginalia
   :config
@@ -424,6 +459,9 @@
   :after corfu
   :init
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
 
 (use-package p4
   :bind (("C-x p e" . p4-edit)
@@ -439,7 +477,8 @@
   :config (show-paren-mode 1))
 
 (use-package python-black
-  :after python)
+  :after python
+    :hook (python-ts-mode . python-black-on-save-mode-enable-dwim))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
