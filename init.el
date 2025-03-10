@@ -32,6 +32,12 @@
 # If you want to create a file, visit that file with C-x C-f,
 # then enter the text in that file's own buffer.")
 
+;; Do not show those confusing warnings when installing packages
+(add-to-list 'display-buffer-alist
+             '("\\`\\*\\(Warnings\\|Compile-Log\\)\\*\\'"
+               (display-buffer-no-window)
+               (allow-no-window . t)))
+
 ;; Hiding toolbars
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -92,12 +98,53 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(defun unfill-paragraph ()
-  "Takes a multi-line paragraph and makes it into a single line of text."
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-paragraph nil)))
-(bind-key "M-Q" #'unfill-paragraph)
+(defun unfill-paragraph (beg end &optional copy-only)
+  "Remove line breaks in the region from BEG to END,
+preserving empty lines as paragraph separators.
+By default, modifies the buffer directly without copying.
+When called with a prefix argument, only copies to the kill ring without modifying."
+  (interactive "r\nP")
+  (let ((text (buffer-substring-no-properties beg end))
+        (result "")
+        (current-paragraph ""))
+
+    ;; Process the text line by line
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+
+      (while (not (eobp))
+        (let ((line (buffer-substring-no-properties
+                     (line-beginning-position)
+                     (line-end-position))))
+
+          (cond
+           ;; Empty line - add to result and reset current paragraph
+           ((string-match-p "^\\s-*$" line)
+            (when (not (string= current-paragraph ""))
+              (setq result (concat result current-paragraph "\n")))
+            (setq result (concat result "\n"))
+            (setq current-paragraph ""))
+
+           ;; Regular line - append to current paragraph with space
+           (t
+            (if (string= current-paragraph "")
+                (setq current-paragraph line)
+              (setq current-paragraph (concat current-paragraph " " line))))))
+
+        (forward-line 1))
+
+      ;; Add final paragraph if any
+      (when (not (string= current-paragraph ""))
+        (setq result (concat result current-paragraph))))
+
+    (if copy-only
+        ;; If universal argument provided, only copy to kill ring
+        (kill-new result)
+      ;; Default behavior: modify buffer without copying
+      (delete-region beg end)
+      (insert result))))
+(bind-key "C-c u" #'unfill-paragraph)
 
 (defun my-prog-mode-hook ()
   (display-line-numbers-mode)
@@ -148,15 +195,78 @@ The DWIM behaviour of this command is as follows:
 (bind-key "C-g" #'my-keyboard-quit-dwim)
 
 
+(require 'project)
+
+(defun my-project-flush-lines (regex file-extension)
+  "Flush lines matching REGEX in all project files with FILE-EXTENSION.
+Similar to `flush-lines` but operates on all project files."
+  (interactive
+   (list
+    (read-regexp "Flush lines matching regex: ")
+    (read-string "File extension (e.g. el, py): ")))
+
+  (let* ((project (project-current t))
+         (files (project-files project))
+         (ext-regexp (concat "\\." file-extension "$"))
+         (matching-files (seq-filter (lambda (file)
+                                       (string-match-p ext-regexp file))
+                                     files))
+         (count 0))
+
+    (dolist (file matching-files)
+      (with-current-buffer (find-file-noselect file)
+        (let ((original-point (point))
+              (original-modified (buffer-modified-p))
+              (lines-removed 0))
+          (save-excursion
+            (goto-char (point-min))
+            (while (re-search-forward regex nil t)
+              (beginning-of-line)
+              (kill-line 1)
+              (setq lines-removed (1+ lines-removed))))
+
+          (when (> lines-removed 0)
+            (setq count (+ count lines-removed))
+            (message "Removed %d lines from %s" lines-removed file)
+            (save-buffer))
+
+          (unless original-modified
+            (set-buffer-modified-p nil))
+          (goto-char original-point))))
+
+    (message "Flushed %d lines total across %d files" count (length matching-files))))
+
+(defun my-project-flush-lines-dwim ()
+  "DWIM version of `project-flush-lines`.
+Uses the word at point as regex and current buffer's extension."
+  (interactive)
+  (let* ((word (thing-at-point 'word t))
+         (file-name (buffer-file-name))
+         (ext (and file-name
+                  (file-name-extension file-name))))
+    (if (and word ext)
+        (my-project-flush-lines word ext)
+      (call-interactively 'my-project-flush-lines))))
+
 ;; Copy buffer file name to kill ring
 (bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
 ;;Packages
+(use-package aidermacs
+  :straight (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  (aidermacs-setup-minor-mode)
+  (setq aidermacs-use-architect-mode t))
+
 (use-package ansi-color
-    :hook (compilation-filter . ansi-color-compilation-filter))
+  :hook (compilation-filter . ansi-color-compilation-filter))
 
 (use-package beancount-mode
   :straight (beancount-mode :type git :host github :repo "beancount/beancount-mode")
+  :bind (:map beancount-mode-map
+              ("M-n" . beancount-goto-next-transaction)
+              ("M-p" . beancount-goto-previous-transaction))
   :hook ((beancount-mode . (lambda () (electric-indent-local-mode -1)))
          (beancount-mode . outline-minor-mode)) )
 
@@ -199,6 +309,9 @@ The DWIM behaviour of this command is as follows:
          (:map minibuffer-local-map
                ("M-s" . consult-history)
                ("M-r" . consult-history)))
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
   :custom
   (consult-line-start-from-top t))
 
@@ -255,6 +368,8 @@ The DWIM behaviour of this command is as follows:
   :hook (after-init . delete-selection-mode))
 
 (use-package diff-hl
+  :after magit
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
   :init
   (global-diff-hl-mode))
 
@@ -379,8 +494,6 @@ The DWIM behaviour of this command is as follows:
               ("C-x 2" . magit-section-show-level-2-all)
               ("C-x 3" . magit-section-show-level-3-all)
               ("C-x 4" . magit-section-show-level-4-all))
-  :config
-  (delete 'Git vc-handled-backends)
   :hook (git-commit-setup . git-commit-turn-on-flyspell))
 
 (use-package marginalia
@@ -414,7 +527,7 @@ The DWIM behaviour of this command is as follows:
         ("C-c o i d" . org-insert-drawer)
         ("C-c o i s" . org-insert-subheading)
         ("C-c o i h" . org-insert-heading)
-                ("C-c o o" . consult-org-heading)
+        ("C-c o o" . consult-org-heading)
         ("C-c C-v k" . org-babel-remove-result)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
@@ -533,6 +646,9 @@ The DWIM behaviour of this command is as follows:
   :bind (:map tempel-map
               ("TAB" . tempel-next)
               ("S-TAB" . tempel-previous)))
+
+
+(use-package tree-sitter-langs)
 
 (use-package uniquify
   :straight (:type built-in)

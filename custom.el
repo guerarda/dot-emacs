@@ -31,16 +31,17 @@
      (shell . t)
      (python \.t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
+ '(org-bookmark-names-plist nil)
  '(org-capture-templates
    '(("b" "Add a book entry" entry
       (file+headline "~/Desktop/org/books.org" "2024")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:" :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry
       (file "~/Desktop/org/todo.org")
-      "* TODO %^{Title}\12:PROPERTIES:\12:CREATED: %U\12:END:\12%?" :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t :prepend t)
+      "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t :prepend t)
      ("n" "Add a note entry" entry
       (file "~/Desktop/org/notes.org")
-      "* %^{Title}\12:PROPERTIES:\12:CREATED: %U\12:END:\12%?" :empty-lines-after 1 :prepend t)))
+      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :empty-lines-after 1 :prepend t)))
  '(org-confirm-babel-evaluate nil)
  '(org-fontify-whole-heading-line nil)
  '(org-hide-leading-stars t)
@@ -50,6 +51,7 @@
  '(org-journal-file-format "%Y-%m-%d.org")
  '(org-journal-file-header "#+title: ")
  '(org-journal-file-type 'yearly)
+ '(org-log-into-drawer t)
  '(org-outline-path-complete-in-steps nil)
  '(org-refile-targets '((org-agenda-files :maxlevel . 3)))
  '(org-refile-use-outline-path 'file)
@@ -59,6 +61,46 @@
       (file+head "${slug}.org" "#+title: ${title}\12")
       :unnarrowed t)))
  '(org-src-fontify-natively t)
+ '(org-src-lang-modes
+   '(("python" . python)
+     ("C" . c)
+     ("C++" . c++)
+     ("asymptote" . asy)
+     ("beamer" . latex)
+     ("calc" . fundamental)
+     ("cpp" . c++)
+     ("ditaa" . artist)
+     ("desktop" . conf-desktop)
+     ("dot" . fundamental)
+     ("elisp" . emacs-lisp)
+     ("ocaml" . tuareg)
+     ("screen" . shell-script)
+     ("sqlite" . sql)
+     ("toml" . conf-toml)
+     ("shell" . sh)
+     ("ash" . sh)
+     ("sh" . sh)
+     ("bash" . sh)
+     ("jsh" . sh)
+     ("bash2" . sh)
+     ("dash" . sh)
+     ("dtksh" . sh)
+     ("ksh" . sh)
+     ("es" . sh)
+     ("rc" . sh)
+     ("itcsh" . sh)
+     ("tcsh" . sh)
+     ("jcsh" . sh)
+     ("csh" . sh)
+     ("ksh88" . sh)
+     ("oash" . sh)
+     ("pdksh" . sh)
+     ("mksh" . sh)
+     ("posix" . sh)
+     ("wksh" . sh)
+     ("wsh" . sh)
+     ("zsh" . sh)
+     ("rpm" . sh)))
  '(org-src-preserve-indentation t)
  '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
@@ -70,9 +112,29 @@
      ("DONE" . "dark green")))
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
+ '(project-switch-commands
+   '((project-find-file "Find file" 102)
+     (project-find-dir "Find directory" 100)
+     (rg-project "rg project" 115)
+     (magit-project-status "Magit" 109)
+     (project-shell "Shell" 99)))
  '(python-shell-interpreter "python3")
  '(reb-re-syntax 'string)
  '(rg-keymap-prefix "\3r")
+ '(safe-local-variable-values
+   '((eval python-black-on-save)
+     (eval progn
+           (defun run-interpreter nil
+             (interactive)
+             (let
+                 ((buffer
+                   (get-buffer-create "*Lox Interpreter*")))
+               (pop-to-buffer buffer)
+               (when
+                   (get-buffer-process buffer)
+                 (delete-process
+                  (get-buffer-process buffer)))
+               (make-comint-in-buffer "Lox Interpreter" buffer "python" nil "lox.py"))))))
  '(sentence-end-double-space nil)
  '(visible-bell nil)
  '(wat-ts-mode-indent-level 4)
@@ -94,4 +156,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(diff-hl-delete ((t nil)))
+ '(diff-hl-insert ((t nil))))
