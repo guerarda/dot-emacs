@@ -1,7 +1,8 @@
 org-mode
 
-(ttl & "#+title: " p n "#+author: " p n n)
+(ttl & "#+title: " p n "#+author: " p n q)
 (src & "#+begin_src " p n r n "#+end_src")
+(example & "#+begin_example" n r n "#+end_example" n)
 
 python-base-mode
 
