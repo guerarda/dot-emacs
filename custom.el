@@ -7,6 +7,8 @@
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(dired-dwim-target t)
+ '(eglot-autoshutdown t)
+ '(eglot-code-action-indications '(eldoc-hint))
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)
@@ -19,8 +21,8 @@
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
  '(llvm-ts-mode-indent-level 4)
+ '(magit-diff-paint-whitespace-lines 'both)
  '(magit-git-executable "git")
- '(major-mode-remap-alist '((python-mode . python-ts-mode)))
  '(markdown-command "pandoc")
  '(nlinum-highlight-current-line t)
  '(org-agenda-files '("~/Desktop/org"))
@@ -34,7 +36,7 @@
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
    '(("b" "Add a book entry" entry
-      (file+headline "~/Desktop/org/books.org" "2024")
+      (file "~/Desktop/org/books.org")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:" :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry
       (file "~/Desktop/org/todo.org")
@@ -118,6 +120,7 @@
      (rg-project "rg project" 115)
      (magit-project-status "Magit" 109)
      (project-shell "Shell" 99)))
+ '(project-vc-extra-root-markers '("package.json"))
  '(python-shell-interpreter "python3")
  '(reb-re-syntax 'string)
  '(rg-keymap-prefix "\3r")
@@ -136,6 +139,7 @@
                   (get-buffer-process buffer)))
                (make-comint-in-buffer "Lox Interpreter" buffer "python" nil "lox.py"))))))
  '(sentence-end-double-space nil)
+ '(set-mark-command-repeat-pop t)
  '(visible-bell nil)
  '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)

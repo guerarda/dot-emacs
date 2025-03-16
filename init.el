@@ -146,12 +146,6 @@ When called with a prefix argument, only copies to the kill ring without modifyi
       (insert result))))
 (bind-key "C-c u" #'unfill-paragraph)
 
-(defun my-prog-mode-hook ()
-  (display-line-numbers-mode)
-  (setq compilation-ask-about-save nil)
-  (subword-mode 1)
-  (electric-pair-local-mode))
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
@@ -161,12 +155,6 @@ When called with a prefix argument, only copies to the kill ring without modifyi
   (bind-key "C-c c b" #'(lambda () (interactive) (swiper "#pragma mark"))))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
-(defun my-js-mode-hook ()
-  (setq indent-tabs-mode t
-        js-indent-level 4
-        tab-width 4)
-  (hs-minor-mode))
-(add-hook 'js-mode-hook 'my-js-mode-hook)
 
 (defun my-keyboard-quit-dwim ()
   "Do-What-I-Mean behaviour for a general `keyboard-quit'.
@@ -193,9 +181,6 @@ The DWIM behaviour of this command is as follows:
     (keyboard-quit))))
 
 (bind-key "C-g" #'my-keyboard-quit-dwim)
-
-
-(require 'project)
 
 (defun my-project-flush-lines (regex file-extension)
   "Flush lines matching REGEX in all project files with FILE-EXTENSION.
@@ -251,7 +236,36 @@ Uses the word at point as regex and current buffer's extension."
 ;; Copy buffer file name to kill ring
 (bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
-;;Packages
+;; Programming related major modes
+;;
+(use-package prog-mode
+  :straight (:type built-in)
+  :hook (prog-mode . (lambda ()
+                       (display-line-numbers-mode)
+                       (setq compilation-ask-about-save nil)
+                       (subword-mode 1)
+                       (electric-pair-local-mode))))
+
+(use-package js-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.js\\'" . js-ts-mode)
+  :init (setq js-indent-level 4)
+  :hook (js-ts-mode . eglot-ensure))
+
+(use-package json-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.json\\'" . json-ts-mode)
+  :init (setq json-ts-mode-indent-offset 4)
+  :hook (json-ts-mode . eglot-ensure))
+
+(use-package typescript-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.ts\\'" . typescript-ts-mode)
+  :custom (typescript-ts-mode-indent-offset 4)
+  :hook (typescript-ts-mode . eglot-ensure))
+
+;; Packages
+;;
 (use-package aidermacs
   :straight (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
   :bind (("C-c a" . aidermacs-transient-menu))
@@ -298,6 +312,7 @@ Uses the word at point as regex and current buffer's extension."
          ("C-M-#" . consult-register)
          ("M-s i" . consult-info)
          ("M-g i" . consult-imenu)
+         ("M-g ." . consult-xref)
          ([remap Info-search] . consult-info)
          (:map search-map
                (("f" . consult-fd)
@@ -320,7 +335,10 @@ Uses the word at point as regex and current buffer's extension."
   :bind (("C-x C-d" . consult-dir)
          :map vertico-map
          ("C-x C-d" . consult-dir)
-         ("C-x C-j" . consult-dir-jump-file)))
+         ("C-x C-j" . consult-dir-jump-file))
+  :custom
+  (corfu-max-width 80)
+  (corfu-min-width 40))
 
 (use-package corfu
   :after cape
@@ -418,8 +436,8 @@ Uses the word at point as regex and current buffer's extension."
   (setq truncate-lines t))
 
 (use-package embark
-  :bind (("C-;" . embark-act)
-         ("M-." . embark-dwim)))
+  :bind* (("C-;" . embark-act)
+          ("M-." . embark-dwim)))
 
 (use-package embark-consult
   :hook
@@ -563,17 +581,18 @@ Uses the word at point as regex and current buffer's extension."
 (use-package nerd-icons)
 
 (use-package nerd-icons-completion
-  :after marginalia
+  :after marginalia nerd-icons
   :config
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 (use-package nerd-icons-corfu
-  :after corfu
+  :after corfu nerd-icons
   :init
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-dired
+  :after dired nerd-icons
   :hook (dired-mode . nerd-icons-dired-mode))
 
 (use-package p4
@@ -647,8 +666,57 @@ Uses the word at point as regex and current buffer's extension."
               ("TAB" . tempel-next)
               ("S-TAB" . tempel-previous)))
 
+(use-package treesit
+  :straight (:type built-in)
+  :mode (("\\.c\\'" . c-ts-mode)
+         ("\\.cpp\\'" . c++-ts-mode)
+         ("\\.h\\'" . c-or-c++-ts-mode)
+         ("\\.hpp\\'" . c++-ts-mode))
+  :preface
+  (defun mp-setup-install-grammars ()
+    "Install Tree-sitter grammars if they are absent."
+    (interactive)
+    (dolist (grammar
+             ;; Note the version numbers. These are the versions that
+             ;; are known to work with Combobulate *and* Emacs.
+             '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
+               (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+               (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+               (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.20.0"))
+               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+               (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
+               (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+               (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
+               (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+               (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
+               (toml . ("https://github.com/tree-sitter/tree-sitter-toml" "v0.5.1"))
+               (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+               (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
+      (add-to-list 'treesit-language-source-alist grammar)
+      ;; Only install `grammar' if we don't already have it
+      ;; installed. However, if you want to *update* a grammar then
+      ;; this obviously prevents that from happening.
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar)))))
 
-(use-package tree-sitter-langs)
+  ;; You can remap major modes with `major-mode-remap-alist'. Note
+  ;; that this does *not* extend to hooks! Make sure you migrate them
+  ;; also
+  (dolist (mapping
+           '((python-mode . python-ts-mode)
+             (css-mode . css-ts-mode)
+             (typescript-mode . typescript-ts-mode)
+             (js-mode . js-ts-mode)
+             (bash-mode . bash-ts-mode)
+             (conf-toml-mode . toml-ts-mode)
+             (go-mode . go-ts-mode)
+             (css-mode . css-ts-mode)
+             (json-mode . json-ts-mode)
+             (js-json-mode . json-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping))
+  :config
+  (mp-setup-install-grammars))
 
 (use-package uniquify
   :straight (:type built-in)
@@ -660,4 +728,10 @@ Uses the word at point as regex and current buffer's extension."
   (setq vertico-count 20))
 
 (use-package wat-ts-mode)
+
+(use-package prettier-js
+  :after js-ts-mode typescript-ts-mode
+  :init
+  :hook ((js-ts-mode . prettier-js-mode)
+         (typescript-ts-mode . prettier-js-mode)))
 
