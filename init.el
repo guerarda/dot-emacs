@@ -233,6 +233,21 @@ Uses the word at point as regex and current buffer's extension."
         (my-project-flush-lines word ext)
       (call-interactively 'my-project-flush-lines))))
 
+(defun my-project-flush-debug-comments-dwim ()
+  "Remove all lines with DEBUG comments in project files of same type as current buffer.
+Uses the appropriate comment syntax for the current major mode."
+  (interactive)
+  (let* ((file-name (buffer-file-name))
+         (ext (and file-name (file-name-extension file-name)))
+         (debug-pattern "\\s-*DEBUG\\b")
+         (case-fold-search nil)
+         (comment-pattern (concat comment-start-skip debug-pattern)))
+    (if (not ext)
+        (message "Buffer has no file extension.")
+      (message "Removing DEBUG comments using pattern: %s" comment-pattern)
+      (my-project-flush-lines comment-pattern ext)
+      (message "Finished removing DEBUG comments from all %s files in project." ext))))
+
 ;; Copy buffer file name to kill ring
 (bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
 
@@ -684,15 +699,12 @@ Uses the word at point as regex and current buffer's extension."
              ;; are known to work with Combobulate *and* Emacs.
              '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
                (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
-               (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
-               (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.20.0"))
                (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
                (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
                (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
                (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
                (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
-               (toml . ("https://github.com/tree-sitter/tree-sitter-toml" "v0.5.1"))
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
                (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
@@ -708,13 +720,8 @@ Uses the word at point as regex and current buffer's extension."
   ;; also
   (dolist (mapping
            '((python-mode . python-ts-mode)
-             (css-mode . css-ts-mode)
              (typescript-mode . typescript-ts-mode)
              (js-mode . js-ts-mode)
-             (bash-mode . bash-ts-mode)
-             (conf-toml-mode . toml-ts-mode)
-             (go-mode . go-ts-mode)
-             (css-mode . css-ts-mode)
              (json-mode . json-ts-mode)
              (js-json-mode . json-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))

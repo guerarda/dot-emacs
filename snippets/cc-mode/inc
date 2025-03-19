@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: includelib
-# key: inc
-# --
-#include <$0>
