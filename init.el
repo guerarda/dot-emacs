@@ -512,6 +512,9 @@ Uses the word at point as regex and current buffer's extension."
               ("C-x 2" . magit-section-show-level-2-all)
               ("C-x 3" . magit-section-show-level-3-all)
               ("C-x 4" . magit-section-show-level-4-all))
+  :custom
+  (magit-diff-paint-whitespace-lines 'both)
+  (magit-git-executable "git")
   :hook (git-commit-setup . git-commit-turn-on-flyspell))
 
 (use-package marginalia

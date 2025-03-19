@@ -21,10 +21,7 @@
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
  '(llvm-ts-mode-indent-level 4)
- '(magit-diff-paint-whitespace-lines 'both)
- '(magit-git-executable "git")
  '(markdown-command "pandoc")
- '(nlinum-highlight-current-line t)
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t)
@@ -146,8 +143,7 @@
  '(whitespace-style
    '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab))
  '(xref-prompt-for-identifier
-   '(not xref-find-definitions xref-find-definitions-other-window xref-find-definitions-other-frame xref-find-references))
- '(yas-global-mode t))
+   '(not xref-find-definitions xref-find-definitions-other-window xref-find-definitions-other-frame xref-find-references)))
 
 ;; (custom-set-faces
 ;;  ;; custom-set-faces was added by Custom.
