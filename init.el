@@ -470,7 +470,8 @@ Uses the appropriate comment syntax for the current major mode."
   :bind (("C-c s f" . fd-dired)))
 
 (use-package flyspell
-  :hook ((text-mode . turn-on-flyspell))
+  :hook ((text-mode . turn-on-flyspell)
+         (prog-mode . flyspell-prog-mode))
   :bind ("M-i" . flyspell-auto-correct-word)
   :config
   (unbind-key "C-." flyspell-mode-map))

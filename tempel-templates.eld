@@ -48,6 +48,7 @@ org-mode
 
 (ttl & "#+title: " p n "#+author: " p n q)
 (src & "#+begin_src " p n r n "#+end_src")
+(nsrc & "#+name: " p n "#+begin_src " p n r n "#+end_src")
 (example & "#+begin_example" n r n "#+end_example" n)
 
 python-base-mode
