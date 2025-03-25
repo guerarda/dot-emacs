@@ -311,7 +311,6 @@ Uses the appropriate comment syntax for the current major mode."
    (compilation-scroll-output 'first-error)))
 
 (use-package consult
-  :demand t
   :bind (("C-s" . consult-line)
          ("C-x b" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
@@ -565,7 +564,7 @@ Uses the appropriate comment syntax for the current major mode."
         ("C-c o i s" . org-insert-subheading)
         ("C-c o i h" . org-insert-heading)
         ("C-c o o" . consult-org-heading)
-        ("C-c C-v k" . org-babel-remove-result)
+        ("C-c C-v k" . org-babel-remove-result-one-or-many)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
   :custom
@@ -736,7 +735,10 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package vertico
   :init
   (vertico-mode)
-  (setq vertico-count 20))
+  (setq vertico-count 20)
+  (vertico-multiform-mode)
+  (setq vertico-multiform-categories '((consult-grep buffer)))
+  (setq vertico-multiform-commands '((consult-fd buffer))))
 
 (use-package wat-ts-mode)
 
@@ -745,4 +747,6 @@ Uses the appropriate comment syntax for the current major mode."
   :init
   :hook ((js-ts-mode . prettier-js-mode)
          (typescript-ts-mode . prettier-js-mode)))
+
+
 

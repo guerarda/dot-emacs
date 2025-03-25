@@ -29,7 +29,7 @@
      (awk . t)
      (C . t)
      (shell . t)
-     (python \.t)))
+     (python t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
