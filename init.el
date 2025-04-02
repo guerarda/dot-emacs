@@ -270,7 +270,7 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package json-ts-mode
   :straight (:type built-in)
   :mode ("\\.json\\'" . json-ts-mode)
-  :init (setq json-ts-mode-indent-offset 4)
+  :init (setq json-ts-mode-indent-offset 2)
   :hook (json-ts-mode . eglot-ensure))
 
 (use-package typescript-ts-mode
@@ -311,8 +311,7 @@ Uses the appropriate comment syntax for the current major mode."
    (compilation-scroll-output 'first-error)))
 
 (use-package consult
-  :bind (("C-s" . consult-line)
-         ("C-x b" . consult-buffer)
+  :bind (("C-x b" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x f" . consult-recent-file)
          ("C-x p b" . consult-project-buffer)
@@ -323,7 +322,7 @@ Uses the appropriate comment syntax for the current major mode."
          ("M-y" . consult-yank-pop)
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)
-         ("C-M-#" . consult-register)
+         ("C-'" . consult-register)
          ("M-s i" . consult-info)
          ("M-g i" . consult-imenu)
          ("M-g ." . consult-xref)
@@ -469,8 +468,7 @@ Uses the appropriate comment syntax for the current major mode."
   :bind (("C-c s f" . fd-dired)))
 
 (use-package flyspell
-  :hook ((text-mode . turn-on-flyspell)
-         (prog-mode . flyspell-prog-mode))
+  :hook ((text-mode . turn-on-flyspell))
   :bind ("M-i" . flyspell-auto-correct-word)
   :config
   (unbind-key "C-." flyspell-mode-map))
@@ -735,18 +733,16 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package vertico
   :init
   (vertico-mode)
-  (setq vertico-count 20)
   (vertico-multiform-mode)
-  (setq vertico-multiform-categories '((consult-grep buffer)))
-  (setq vertico-multiform-commands '((consult-fd buffer))))
+  :custom
+  (vertico-resize nil)
+  (vertico-count 20))
 
 (use-package wat-ts-mode)
 
 (use-package prettier-js
-  :after js-ts-mode typescript-ts-mode
+  :after (:any js-ts-mode typescript-ts-mode)
   :init
   :hook ((js-ts-mode . prettier-js-mode)
          (typescript-ts-mode . prettier-js-mode)))
-
-
 
