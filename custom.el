@@ -7,6 +7,9 @@
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(dired-dwim-target t)
+ '(ediff-diff-options "-w")
+ '(ediff-split-window-function 'split-window-horizontally)
+ '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(eglot-autoshutdown t)
  '(eglot-code-action-indications '(eldoc-hint))
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
@@ -21,6 +24,7 @@
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
  '(llvm-ts-mode-indent-level 4)
+ '(magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
  '(markdown-command "pandoc")
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
@@ -61,7 +65,8 @@
       :unnarrowed t)))
  '(org-src-fontify-natively t)
  '(org-src-lang-modes
-   '(("python" . python)
+   '(("json" . json-ts-mode)
+     ("python" . python)
      ("C" . c)
      ("C++" . c++)
      ("asymptote" . asy)
@@ -105,12 +110,13 @@
  '(org-todo-keyword-faces
    '(("TODO" . "red")
      ("PROGRESS" . "orange")
-     ("WAITING" . "violet")
-     ("REVIEW" . "medium purple")
+     ("WAITING" . "cyan")
+     ("REVIEW" . "yellow")
      ("CANCELLED" . "pale green")
      ("DONE" . "dark green")))
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
+ '(orgit-store-reference t)
  '(project-switch-commands
    '((project-find-file "Find file" 102)
      (project-find-dir "Find directory" 100)

@@ -56,7 +56,6 @@
       mouse-yank-at-point t
       require-final-newline t
       load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain
       backup-directory-alist `(("." . ,(concat user-emacs-directory
                                                "backups"))))
 
@@ -446,7 +445,9 @@ Uses the appropriate comment syntax for the current major mode."
   :custom
   (tab-always-indent 'complete)
   :config
-  (setq truncate-lines t))
+  (setq truncate-lines t)
+  :bind (("M-z" . zap-up-to-char)
+         ("C-x C-b" . ibuffer)))
 
 (use-package embark
   :bind* (("C-;" . embark-act)
@@ -571,6 +572,8 @@ Uses the appropriate comment syntax for the current major mode."
   (subword-mode 1)
   (setq org-agenda-files '("~/Desktop/org")))
 
+(use-package orgit)
+
 (use-package org-bullets-mode
   :disabled t
   :hook (org-mode . org-bullets-mode))
@@ -616,10 +619,10 @@ Uses the appropriate comment syntax for the current major mode."
          ("C-x p d" . p4-diff)
          ("C-x p =" . p4-diff2)))
 
-(use-package paredit
-  :hook ((clojure-mode . paredit-mode)
-         (lisp-mode . paredit-mode)
-         (emacs-lisp-mode . paredit-mode)))
+;; (use-package paredit
+;;   :hook ((clojure-mode . paredit-mode)
+;;          (lisp-mode . paredit-mode)
+;;          (emacs-lisp-mode . paredit-mode)))
 
 (use-package paren
   :config (show-paren-mode 1))
@@ -742,7 +745,7 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package prettier-js
   :after (:any js-ts-mode typescript-ts-mode)
-  :init
-  :hook ((js-ts-mode . prettier-js-mode)
-         (typescript-ts-mode . prettier-js-mode)))
+  ;; :hook ((js-ts-mode . prettier-js-mode)
+  ;;        (typescript-ts-mode . prettier-js-mode)))
+  )
 
