@@ -357,11 +357,13 @@ Uses the appropriate comment syntax for the current major mode."
   :bind (:map corfu-map
               ("C-SPC" . corfu-insert-separator))
   :custom
-  (corfu-auto t)
   (corfu-separator ?\s)
+  :hook
+  ((prog-mode . corfu-mode)
+   (shell-mode . corfu-mode))
   :init
-  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
-  (global-corfu-mode))
+  (global-corfu-mode)
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 (use-package crux
   :bind (([remap kill-line] . crux-smart-kill-line)
@@ -444,6 +446,7 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package emacs
   :custom
   (tab-always-indent 'complete)
+  (text-mode-ispell-word-completion nil)
   :config
   (setq truncate-lines t)
   :bind (("M-z" . zap-up-to-char)
