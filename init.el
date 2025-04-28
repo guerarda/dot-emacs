@@ -447,6 +447,7 @@ Uses the appropriate comment syntax for the current major mode."
   :custom
   (tab-always-indent 'complete)
   (text-mode-ispell-word-completion nil)
+  (which-key-mode t)
   :config
   (setq truncate-lines t)
   :bind (("M-z" . zap-up-to-char)
@@ -549,11 +550,11 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package orderless
   :init
     (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package org
-  :after consult
+  :demand t
   :bind (("C-c o a" . org-agenda)
          ("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
@@ -616,11 +617,6 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package nerd-icons-dired
   :after dired nerd-icons
   :hook (dired-mode . nerd-icons-dired-mode))
-
-(use-package p4
-  :bind (("C-x p e" . p4-edit)
-         ("C-x p d" . p4-diff)
-         ("C-x p =" . p4-diff2)))
 
 ;; (use-package paredit
 ;;   :hook ((clojure-mode . paredit-mode)
@@ -751,4 +747,3 @@ Uses the appropriate comment syntax for the current major mode."
   ;; :hook ((js-ts-mode . prettier-js-mode)
   ;;        (typescript-ts-mode . prettier-js-mode)))
   )
-

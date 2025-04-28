@@ -33,7 +33,8 @@
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
-   '(("b" "Add a book entry" entry (file "~/Desktop/org/books.org")
+   '(("b" "Add a book entry" entry
+      (file+headline "~/Desktop/org/books.org" "2025")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
