@@ -547,11 +547,20 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package modern-cpp-font-lock
   :hook (c++-mode . modern-c++-font-lock-mode))
 
+(use-package ob-racket
+  :after org
+  :config
+  (add-hook 'ob-racket-pre-runtime-library-load-hook
+	      #'ob-racket-raco-make-runtime-library)
+  :straight (ob-racket
+	       :type git :host github :repo "hasu/emacs-ob-racket"
+	       :files ("*.el" "*.rkt")))
+
 (use-package orderless
   :init
-    (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles partial-completion)))))
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package org
   :demand t
@@ -618,14 +627,19 @@ Uses the appropriate comment syntax for the current major mode."
   :after dired nerd-icons
   :hook (dired-mode . nerd-icons-dired-mode))
 
-;; (use-package paredit
-;;   :hook ((clojure-mode . paredit-mode)
-;;          (lisp-mode . paredit-mode)
-;;          (emacs-lisp-mode . paredit-mode)))
+(use-package paredit
+  :bind (:map paredit-mode-map
+              ("M-s" . nil)
+              ("M-p" . paredit-splice-sexp)
+              ("C-`" . paredit-splice-sexp))
+  :hook ((clojure-mode . paredit-mode)
+         (lisp-mode . paredit-mode)
+         (emacs-lisp-mode . paredit-mode)))
 
 (use-package paren
   :config (show-paren-mode 1))
 
+(use-package racket-mode)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))

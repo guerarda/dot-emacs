@@ -29,7 +29,8 @@
  '(markdown-command "pandoc")
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
-   '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python t)))
+   '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
+     (racket . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
