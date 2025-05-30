@@ -278,6 +278,16 @@ Uses the appropriate comment syntax for the current major mode."
   :custom (typescript-ts-mode-indent-offset 4)
   :hook (typescript-ts-mode . eglot-ensure))
 
+(use-package css-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.css\\'" . css-ts-mode)
+  :custom (css-indent-offset 2))
+
+(use-package python-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.py\\'" . python-ts-mode)
+  :hook (python-ts-mode . eglot-ensure))
+
 ;; Packages
 ;;
 (use-package aidermacs
@@ -446,9 +456,7 @@ Uses the appropriate comment syntax for the current major mode."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-(use-package eglot
-  :hook
-  (python-ts-mode . eglot-ensure))
+(use-package eglot)
 
 (use-package emacs
   :custom
@@ -736,6 +744,7 @@ Uses the appropriate comment syntax for the current major mode."
              ;; are known to work with Combobulate *and* Emacs.
              '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
                (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+               (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
                (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
                (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
@@ -757,6 +766,8 @@ Uses the appropriate comment syntax for the current major mode."
   ;; also
   (dolist (mapping
            '((python-mode . python-ts-mode)
+             (css-mode . css-ts-mode)
+             (html-mode . html-ts-mode)
              (typescript-mode . typescript-ts-mode)
              (js-mode . js-ts-mode)
              (json-mode . json-ts-mode)
