@@ -61,6 +61,8 @@ python-base-mode
 (dprintf "print(f\"{" q "}\")  #  DEBUG")
 (ifmain n "if __name__ == \"__main__\":" n> q)
 (testcase "class Test" p "(unittest.TestCase):" n> "def test_" p "(self):" n> q)
+(try "try:" n> "pass" q n> "except:" n> "pass" n)
+(tryf "try:" n> "pass" q n n> "except:" n> "pass" n n> "finally:" n> "pass" n n)
 
 prog-mode
 
