@@ -98,11 +98,7 @@
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)"
                "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(orgit-store-reference t)
- '(project-switch-commands
-   '((project-find-file "Find file" 102)
-     (project-find-dir "Find directory" 100)
-     (rg-project "rg project" 115) (magit-project-status "Magit" 109)
-     (project-shell "Shell" 99)))
+ '(project-switch-commands 'magit-project-status)
  '(project-vc-extra-root-markers '("package.json"))
  '(python-shell-interpreter "python3")
  '(reb-re-syntax 'string)
@@ -122,6 +118,7 @@
                                       "python" nil "lox.py"))))))
  '(sentence-end-double-space nil)
  '(set-mark-command-repeat-pop t)
+ '(vc-follow-symlinks nil)
  '(visible-bell nil)
  '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)

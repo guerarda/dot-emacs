@@ -287,6 +287,12 @@ Uses the appropriate comment syntax for the current major mode."
   (aidermacs-setup-minor-mode)
   (setq aidermacs-use-architect-mode t))
 
+(use-package autorevert
+  :ensure nil
+  :hook (after-init . global-auto-revert-mode)
+  :config
+  (setq auto-revert-verbose t))
+
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter))
 
@@ -408,7 +414,8 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package dired
   :straight (:type built-in)
   :bind (:map dired-mode-map
-              ("a" . dired-jump)))
+              ("a" . dired-jump)
+              ("M-s" . nil)))
 
 (use-package dired-narrow
   :after dired
@@ -568,7 +575,9 @@ Uses the appropriate comment syntax for the current major mode."
          ("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
          ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/notes.org")))
-         ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org"))))
+         ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org")))
+         ("C-c o b" . (lambda () (interactive) (let ((default-directory "~/Desktop/org/"))
+                                                 (call-interactively 'find-file)))))
   (:map org-mode-map
         ("C-c C-." . org-time-stamp-inactive)
         ("C-c o e" . org-emphasize)
