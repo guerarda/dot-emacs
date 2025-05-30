@@ -626,12 +626,26 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package paren
   :config (show-paren-mode 1))
 
-(use-package python-black
-  :after python
-    :hook (python-ts-mode . python-black-on-save-mode-enable-dwim))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package reformatter
+  :hook (;; (css-ts-mode . prettierjs-format-on-save-mode)
+         ;; (js-ts-mode . prettierjs-format-on-save-mode)
+         ;; (json-ts-mode . prettierjs-format-on-save-mode)
+         ;; (typescript-ts-mode . prettierjs-format-on-save-mode)
+         ;; (python-ts-mode . ruff-format-on-save-mode)
+         )
+  :config
+  (reformatter-define prettierjs-format
+    :program "prettier"
+    :args (list "--stdin-filepath" buffer-file-name)
+    :lighter " PrtFmt")
+  (reformatter-define ruff-format
+    :program "ruff"
+    :args (list "format" "--stdin-filename" buffer-file-name "-")
+    :lighter " ruffFmt"))
 
 (use-package recentf
   :config
@@ -741,9 +755,3 @@ Uses the appropriate comment syntax for the current major mode."
   (vertico-count 20))
 
 (use-package wat-ts-mode)
-
-(use-package prettier-js
-  :after (:any js-ts-mode typescript-ts-mode)
-  ;; :hook ((js-ts-mode . prettier-js-mode)
-  ;;        (typescript-ts-mode . prettier-js-mode)))
-  )
