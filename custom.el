@@ -34,17 +34,30 @@
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
-   '(("b" "Add a book entry" entry
+   '(("c" "Add a code block entry"  entry
+  (file "~/Desktop/org/notes.org")
+  "* %^{Title}
+:LOGBOOK:
+- Created on %U
+:END:
+
+%?
+#+begin_src %^{Language}
+%i
+#+end_src"
+  :empty-lines-after 1
+  :prepend t)
+     ("b" "Add a book entry" entry
       (file+headline "~/Desktop/org/books.org" "2025")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
       "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
-      :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t
-      :prepend t)
+      :prepend t :empty-lines-before 1 :empty-lines-after 1
+      :kill-buffer t)
      ("n" "Add a note entry" entry (file "~/Desktop/org/notes.org")
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
-      :empty-lines-after 1 :prepend t)))
+      :prepend t :empty-lines-before 1 :empty-lines-after 1)))
  '(org-confirm-babel-evaluate nil)
  '(org-fontify-whole-heading-line nil)
  '(org-hide-leading-stars t)
@@ -78,12 +91,12 @@
  '(org-src-preserve-indentation t)
  '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
-   '(("TODO" . "red") ("PROGRESS" . "orange") ("WAITING" . "cyan")
-     ("REVIEW" . "yellow") ("CANCELLED" . "pale green")
+   '(("TODO" . "red") ("PROGRESS" . "orange") ("WAITING" . "dark cyan")
+     ("REVIEW" . "yellow") ("SHELVED" . "pale green")
      ("DONE" . "dark green")))
  '(org-todo-keywords
-   '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "REVIEW(r)" "|"
-               "CANCELLED(c)" "DONE(d)")))
+   '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)"
+               "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(orgit-store-reference t)
  '(project-switch-commands
    '((project-find-file "Find file" 102)
