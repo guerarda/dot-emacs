@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(corfu-auto t)
  '(deft-auto-save-interval 0.0)
+ '(deft-filter-only-filenames t)
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(dired-dwim-target t)
@@ -22,6 +23,13 @@
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
+ '(gptel-org-branching-context t)
+ '(gptel-prompt-prefix-alist
+   '((markdown-mode . "### ") (org-mode . "@user\12")
+     (text-mode . "### ")))
+ '(gptel-response-prefix-alist
+   '((markdown-mode . "") (org-mode . "@assistant\12") (text-mode . "")))
+ '(isearch-lax-whitespace t)
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
  '(llvm-ts-mode-indent-level 4)
@@ -34,19 +42,9 @@
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
-   '(("c" "Add a code block entry"  entry
-  (file "~/Desktop/org/notes.org")
-  "* %^{Title}
-:LOGBOOK:
-- Created on %U
-:END:
-
-%?
-#+begin_src %^{Language}
-%i
-#+end_src"
-  :empty-lines-after 1
-  :prepend t)
+   '(("c" "Add a code block entry" entry (file "~/Desktop/org/notes.org")
+      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12\12%?\12#+begin_src %^{Language}\12%i\12#+end_src"
+      :empty-lines-after 1 :prepend t)
      ("b" "Add a book entry" entry
       (file+headline "~/Desktop/org/books.org" "2025")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
@@ -99,7 +97,7 @@
                "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
  '(orgit-store-reference t)
  '(project-switch-commands 'magit-project-status)
- '(project-vc-extra-root-markers '("package.json"))
+ '(project-vc-extra-root-markers '("pyproject.toml" "Cargo.toml" "package.json"))
  '(python-shell-interpreter "python3")
  '(reb-re-syntax 'string)
  '(recentf-max-menu-items 20)

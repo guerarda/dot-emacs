@@ -248,7 +248,13 @@ Uses the appropriate comment syntax for the current major mode."
       (message "Finished removing DEBUG comments from all %s files in project." ext))))
 
 ;; Copy buffer file name to kill ring
-(bind-key* "C-c C-f" #'(lambda () (interactive) (kill-new (with-output-to-string (princ (buffer-file-name))))))
+(bind-key* "C-c C-f"
+           (lambda (arg)
+             (interactive "P")
+             (when-let ((filename (buffer-file-name)))
+               (kill-new (if arg
+                             filename
+                           (file-name-nondirectory filename))))))
 
 ;; Programming related major modes
 ;;
@@ -263,20 +269,17 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package js-ts-mode
   :straight (:type built-in)
   :mode ("\\.js\\'" . js-ts-mode)
-  :init (setq js-indent-level 4)
-  :hook (js-ts-mode . eglot-ensure))
+  :init (setq js-indent-level 4))
 
 (use-package json-ts-mode
   :straight (:type built-in)
   :mode ("\\.json\\'" . json-ts-mode)
-  :init (setq json-ts-mode-indent-offset 2)
-  :hook (json-ts-mode . eglot-ensure))
+  :init (setq json-ts-mode-indent-offset 2))
 
 (use-package typescript-ts-mode
   :straight (:type built-in)
   :mode ("\\.ts\\'" . typescript-ts-mode)
-  :custom (typescript-ts-mode-indent-offset 4)
-  :hook (typescript-ts-mode . eglot-ensure))
+  :custom (typescript-ts-mode-indent-offset 4))
 
 (use-package css-ts-mode
   :straight (:type built-in)
@@ -285,8 +288,11 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package python-ts-mode
   :straight (:type built-in)
-  :mode ("\\.py\\'" . python-ts-mode)
-  :hook (python-ts-mode . eglot-ensure))
+  :mode ("\\.py\\'" . python-ts-mode))
+
+(use-package rust-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.rs\\'" . rust-ts-mode))
 
 ;; Packages
 ;;
@@ -456,7 +462,15 @@ Uses the appropriate comment syntax for the current major mode."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-(use-package eglot)
+(use-package eglot
+  :hook
+  (((css-ts-mode
+      js-ts-mode
+      json-ts-mode
+      python-ts-mode
+      typescript-ts-mode
+      rust-ts-mode) . eglot-ensure)
+   (eglot-connect . (setq eglot-inlay-hints-mode nil))))
 
 (use-package emacs
   :custom
@@ -493,6 +507,15 @@ Uses the appropriate comment syntax for the current major mode."
   :config
   (unbind-key "C-." flyspell-mode-map))
 
+(use-package gptel
+  :init
+  (setq gptel-model 'claude-sonnet-4-20250514
+        gptel-backend (gptel-make-anthropic "Claude"
+                                            :stream t :key gptel-api-key))
+  (gptel-make-gemini "Gemini" :stream t :key gptel-api-key)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  :custom
+  (gptel-default-mode 'org-mode))
 
 (use-package helpful
   :bind (("C-h f" . helpful-callable)
@@ -585,14 +608,19 @@ Uses the appropriate comment syntax for the current major mode."
          ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/notes.org")))
          ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org")))
          ("C-c o b" . (lambda () (interactive) (let ((default-directory "~/Desktop/org/"))
-                                                 (call-interactively 'find-file)))))
+                                                  (call-interactively 'find-file))))
+)
   (:map org-mode-map
         ("C-c C-." . org-time-stamp-inactive)
         ("C-c o e" . org-emphasize)
         ("C-c o i d" . org-insert-drawer)
         ("C-c o i s" . org-insert-subheading)
         ("C-c o i h" . org-insert-heading)
-        ("C-c o o" . consult-org-heading)
+        ("C-c o i t" . (lambda () (interactive)
+                         (progn 
+                           (org-insert-heading (org-current-level))
+                           (org-insert-time-stamp (current-time) t t nil nil nil))))
+        ("M-g o" . consult-org-heading)
         ("C-c C-v k" . org-babel-remove-result-one-or-many)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
@@ -603,10 +631,6 @@ Uses the appropriate comment syntax for the current major mode."
   (setq org-agenda-files '("~/Desktop/org")))
 
 (use-package orgit)
-
-(use-package org-bullets-mode
-  :disabled t
-  :hook (org-mode . org-bullets-mode))
 
 (use-package org-journal
   :preface
@@ -662,21 +686,19 @@ Uses the appropriate comment syntax for the current major mode."
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package reformatter
-  :hook (;; (css-ts-mode . prettierjs-format-on-save-mode)
-         ;; (js-ts-mode . prettierjs-format-on-save-mode)
-         ;; (json-ts-mode . prettierjs-format-on-save-mode)
-         ;; (typescript-ts-mode . prettierjs-format-on-save-mode)
-         ;; (python-ts-mode . ruff-format-on-save-mode)
-         )
-  :config
+  :init
   (reformatter-define prettierjs-format
-    :program "prettier"
-    :args (list "--stdin-filepath" buffer-file-name)
-    :lighter " PrtFmt")
+                      :program "prettier"
+                      :args (list "--stdin-filepath" buffer-file-name)
+                      :lighter " PrtFmt")
   (reformatter-define ruff-format
-    :program "ruff"
-    :args (list "format" "--stdin-filename" buffer-file-name "-")
-    :lighter " ruffFmt"))
+                      :program "ruff"
+                      :args (list "format" "--stdin-filename" buffer-file-name "-")
+                      :lighter " fmt")
+  (reformatter-define ruff-sort-imports
+                      :program "ruff"
+                      :args (list "check" "--select" "I" "--fix" "--stdin-filename" buffer-file-name "-")
+                      :lighter " isort"))
 
 (use-package recentf
   :config
@@ -693,6 +715,10 @@ Uses the appropriate comment syntax for the current major mode."
   (setq rg-custom-type-aliases
         '(("bff" . "*.bff")))
   :custom (rg-executable "rg"))
+
+(use-package rustic
+  :init
+  (setq rustic-lsp-client 'eglot))
 
 (use-package saveplace
   :config
@@ -789,3 +815,4 @@ Uses the appropriate comment syntax for the current major mode."
   (vertico-count 20))
 
 (use-package wat-ts-mode)
+
