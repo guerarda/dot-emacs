@@ -3,6 +3,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(consult-imenu-config
+   '((emacs-lisp-mode :toplevel "Functions" :types
+                      ((102 "Functions" font-lock-function-name-face)
+                       (109 "Macros" font-lock-function-name-face)
+                       (112 "Packages" font-lock-constant-face)
+                       (116 "Types" font-lock-type-face)
+                       (118 "Variables" font-lock-variable-name-face)))
+     (python-ts-mode :toplevel "Function" :types
+                     ((102 "Function" font-lock-function-name-face)
+                      (99 "Class" font-lock-type-face)
+                      (109 "Method" font-lock-function-name-face)
+                      (112 "Property" font-lock-variable-name-face)))))
  '(corfu-auto t)
  '(deft-auto-save-interval 0.0)
  '(deft-filter-only-filenames t)
@@ -38,7 +50,7 @@
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (racket . t)))
+     (racket . t) (js \.t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
@@ -95,6 +107,7 @@
  '(org-todo-keywords
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)"
                "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
+ '(org-use-speed-commands t)
  '(orgit-store-reference t)
  '(project-switch-commands 'magit-project-status)
  '(project-vc-extra-root-markers '("pyproject.toml" "Cargo.toml" "package.json"))
@@ -117,6 +130,7 @@
  '(sentence-end-double-space nil)
  '(set-mark-command-repeat-pop t)
  '(vc-follow-symlinks nil)
+ '(vertico-sort-function 'vertico-sort-history-alpha)
  '(visible-bell nil)
  '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)

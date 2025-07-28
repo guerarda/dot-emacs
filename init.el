@@ -462,15 +462,26 @@ Uses the appropriate comment syntax for the current major mode."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
+(use-package eat
+  :straight (:type git
+             :host codeberg
+             :repo "akib/emacs-eat"
+             :files ("*.el" ("term" "term/*.el") "*.texi"
+                     "*.ti" ("terminfo/e" "terminfo/e/*")
+                     ("terminfo/65" "terminfo/65/*")
+                     ("integration" "integration/*")
+                     (:exclude ".dir-locals.el" "*-tests.el"))))
+
 (use-package eglot
+  :init
+  (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1))) 
   :hook
-  (((css-ts-mode
-      js-ts-mode
-      json-ts-mode
-      python-ts-mode
-      typescript-ts-mode
-      rust-ts-mode) . eglot-ensure)
-   (eglot-connect . (setq eglot-inlay-hints-mode nil))))
+  ((css-ts-mode
+    js-ts-mode
+    json-ts-mode
+    python-ts-mode
+    typescript-ts-mode
+    rust-ts-mode) . eglot-ensure))
 
 (use-package emacs
   :custom
@@ -480,7 +491,8 @@ Uses the appropriate comment syntax for the current major mode."
   :config
   (setq truncate-lines t)
   :bind (("M-z" . zap-up-to-char)
-         ("C-x C-b" . ibuffer)))
+         ("C-x C-b" . ibuffer)
+         ("C-c d" . duplicate-dwim)))
 
 (use-package embark
   :bind* (("C-;" . embark-act)
@@ -611,6 +623,11 @@ Uses the appropriate comment syntax for the current major mode."
                                                   (call-interactively 'find-file))))
 )
   (:map org-mode-map
+        ("C-c o u" . org-move-subtree-up)
+        ("C-c o d" . org-move-subtree-down)
+        ("C-c o p" . org-promote-subtree)
+        ("C-c o m" . org-demote-subtree)
+        ("C-c o k" . org-cut-subtree)
         ("C-c C-." . org-time-stamp-inactive)
         ("C-c o e" . org-emphasize)
         ("C-c o i d" . org-insert-drawer)
@@ -815,4 +832,21 @@ Uses the appropriate comment syntax for the current major mode."
   (vertico-count 20))
 
 (use-package wat-ts-mode)
+
+
+(defun my-ediff-setup-windows-in-new-frame (buffer-A buffer-B buffer-C control-buffer)
+  "Set up ediff windows in a new frame."
+  (let ((new-frame (make-frame)))
+    (select-frame new-frame)
+    (delete-other-windows)
+    (split-window-horizontally)
+    (switch-to-buffer buffer-A)
+    (other-window 1)
+    (switch-to-buffer buffer-B)
+    (when buffer-C
+      (split-window-vertically)
+      (other-window 1)
+      (switch-to-buffer buffer-C))))
+
+;;(setq ediff-window-setup-function 'my-ediff-setup-windows-in-new-frame)
 
