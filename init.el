@@ -490,6 +490,7 @@ Uses the appropriate comment syntax for the current major mode."
   (which-key-mode t)
   :config
   (setq truncate-lines t)
+  (setq shell-command-switch "-ic")
   :bind (("M-z" . zap-up-to-char)
          ("C-x C-b" . ibuffer)
          ("C-c d" . duplicate-dwim)))
