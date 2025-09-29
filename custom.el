@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(c-ts-mode-indent-style 'linux)
  '(consult-imenu-config
    '((emacs-lisp-mode :toplevel "Functions" :types
                       ((102 "Functions" font-lock-function-name-face)
@@ -25,7 +26,7 @@
  '(ediff-split-window-function 'split-window-horizontally)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(eglot-autoshutdown t)
- '(eglot-code-action-indications '(eldoc-hint))
+ '(eglot-code-action-indications nil)
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)

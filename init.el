@@ -181,6 +181,10 @@ The DWIM behaviour of this command is as follows:
 
 (bind-key "C-g" #'my-keyboard-quit-dwim)
 
+(defun ag/auto-commit ()
+  (interactive)
+  (start-process "gcauto" "*Messages*" shell-file-name "-ic" "gcauto"))
+
 (defun my-project-flush-lines (regex file-extension)
   "Flush lines matching REGEX in all project files with FILE-EXTENSION.
 Similar to `flush-lines` but operates on all project files."
@@ -266,10 +270,16 @@ Uses the appropriate comment syntax for the current major mode."
                        (subword-mode 1)
                        (electric-pair-local-mode))))
 
+(use-package c++-ts-mode
+  :straight (:type built-in)
+  :mode (("\\.cpp\\'" . c++-ts-mode)
+         ("\\.h\\'" . c++-ts-mode))
+  :init (setq c-ts-mode-indent-offset 4))
+
 (use-package js-ts-mode
   :straight (:type built-in)
   :mode ("\\.js\\'" . js-ts-mode)
-  :init (setq js-indent-level 4))
+  :init (setq js-indent-level 2))
 
 (use-package json-ts-mode
   :straight (:type built-in)
@@ -279,7 +289,7 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package typescript-ts-mode
   :straight (:type built-in)
   :mode ("\\.ts\\'" . typescript-ts-mode)
-  :custom (typescript-ts-mode-indent-offset 4))
+  :custom (typescript-ts-mode-indent-offset 2))
 
 (use-package css-ts-mode
   :straight (:type built-in)
@@ -490,7 +500,6 @@ Uses the appropriate comment syntax for the current major mode."
   (which-key-mode t)
   :config
   (setq truncate-lines t)
-  (setq shell-command-switch "-ic")
   :bind (("M-z" . zap-up-to-char)
          ("C-x C-b" . ibuffer)
          ("C-c d" . duplicate-dwim)))
@@ -596,7 +605,7 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package markdown-mode)
 
 (use-package modern-cpp-font-lock
-  :hook (c++-mode . modern-c++-font-lock-mode))
+  :hook (c++-ts-mode . modern-c++-font-lock-mode))
 
 (use-package ob-racket
   :after org
@@ -797,6 +806,7 @@ Uses the appropriate comment syntax for the current major mode."
                (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+               (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
                (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
       (add-to-list 'treesit-language-source-alist grammar)
       ;; Only install `grammar' if we don't already have it
@@ -851,3 +861,17 @@ Uses the appropriate comment syntax for the current major mode."
 
 ;;(setq ediff-window-setup-function 'my-ediff-setup-windows-in-new-frame)
 
+(use-package csv-mode)
+
+(use-package web-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
+
+  :config
+  (setq web-mode-markup-indent-offset 4)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4))
+
+(use-package wgsl-ts-mode
+  :straight (:type git :host github :repo "acowley/wgsl-ts-mode"))
