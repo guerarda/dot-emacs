@@ -97,3 +97,8 @@ js-base-mode typescript-ts-base-mode
 (imp "import {" p "} from \"" q "\";")
 (impas "import {" p " as " p "} from \"" q "\";")
 
+c-ts-mode c++-ts-mode
+
+(hdr & "// " p n
+    "//" (make-string 78 45) q)
+

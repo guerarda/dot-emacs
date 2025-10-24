@@ -314,7 +314,6 @@ Uses the appropriate comment syntax for the current major mode."
   (setq aidermacs-use-architect-mode t))
 
 (use-package autorevert
-  :ensure nil
   :hook (after-init . global-auto-revert-mode)
   :config
   (setq auto-revert-verbose t))
