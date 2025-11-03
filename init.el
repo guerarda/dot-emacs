@@ -185,6 +185,11 @@ The DWIM behaviour of this command is as follows:
   (interactive)
   (start-process "gcauto" "*Messages*" shell-file-name "-ic" "gcauto"))
 
+(defun ag/insert-now-timestamp ()
+  "Insert current timestamp at point."
+  (interactive)
+  (insert (format-time-string "%a %b %e %H:%M:%S %Z %Y")))
+
 (defun my-project-flush-lines (regex file-extension)
   "Flush lines matching REGEX in all project files with FILE-EXTENSION.
 Similar to `flush-lines` but operates on all project files."
