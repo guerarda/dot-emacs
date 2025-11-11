@@ -729,7 +729,10 @@ Uses the appropriate comment syntax for the current major mode."
   (reformatter-define ruff-sort-imports
                       :program "ruff"
                       :args (list "check" "--select" "I" "--fix" "--stdin-filename" buffer-file-name "-")
-                      :lighter " isort"))
+                      :lighter " isort")
+  (reformatter-define rust-format
+                      :program  "rustfmt"
+                      :lighter " fmt"))
 
 (use-package recentf
   :config
@@ -746,10 +749,6 @@ Uses the appropriate comment syntax for the current major mode."
   (setq rg-custom-type-aliases
         '(("bff" . "*.bff")))
   :custom (rg-executable "rg"))
-
-(use-package rustic
-  :init
-  (setq rustic-lsp-client 'eglot))
 
 (use-package saveplace
   :config
