@@ -73,7 +73,7 @@ prog-mode
 (bug (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
 (hack (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
 
-js-base-mode typescript-ts-base-mode
+js-ts-mode typescript-ts-base-mode
 
 (dprint "console.log(`" q "`) // DEBUG")
 
@@ -102,3 +102,7 @@ c-ts-mode c++-ts-mode
 (hdr & "// " p n
     "//" (make-string 78 45) q)
 
+
+rust-ts-mode
+
+(pln "println!(\"" p "\", " p ");" n> q)

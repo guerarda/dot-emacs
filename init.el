@@ -488,7 +488,7 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package eglot
   :init
-  (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1))) 
+  (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
   :hook
   ((css-ts-mode
     js-ts-mode
@@ -526,12 +526,6 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package fd-dired
   :bind (("C-c s f" . fd-dired)))
-
-(use-package flyspell
-  :hook ((text-mode . turn-on-flyspell))
-  :bind ("M-i" . flyspell-auto-correct-word)
-  :config
-  (unbind-key "C-." flyspell-mode-map))
 
 (use-package gptel
   :init
@@ -585,6 +579,16 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package ispell
   :bind ("M-%" . ispell-word))
 
+(use-package jinx
+  :after vertico
+  :hook ((text-mode . jinx-mode))
+  :bind (("M-i" . jinx-correct))
+  :config
+  (unbind-key "M-$" jinx-correct)
+  :custom
+  (jinx-camel-modes '(prog-mode))
+  (jinx-delay 0.1))
+
 (use-package llvm-ts-mode)
 
 (use-package magit
@@ -596,8 +600,7 @@ Uses the appropriate comment syntax for the current major mode."
               ("C-x 4" . magit-section-show-level-4-all))
   :custom
   (magit-diff-paint-whitespace-lines 'both)
-  (magit-git-executable "git")
-  :hook (git-commit-setup . git-commit-turn-on-flyspell))
+  (magit-git-executable "git"))
 
 (use-package marginalia
   :after vertico
@@ -615,10 +618,10 @@ Uses the appropriate comment syntax for the current major mode."
   :after org
   :config
   (add-hook 'ob-racket-pre-runtime-library-load-hook
-	      #'ob-racket-raco-make-runtime-library)
+              #'ob-racket-raco-make-runtime-library)
   :straight (ob-racket
-	       :type git :host github :repo "hasu/emacs-ob-racket"
-	       :files ("*.el" "*.rkt")))
+               :type git :host github :repo "hasu/emacs-ob-racket"
+               :files ("*.el" "*.rkt")))
 
 (use-package orderless
   :init
@@ -627,15 +630,25 @@ Uses the appropriate comment syntax for the current major mode."
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package org
-  :demand t
+  :preface
+  (defun ag/org-insert-heading (arg)
+    (interactive "P")
+    (if arg (org-insert-subheading arg)
+      (org-insert-heading)))
+
+  (defun ag/org-insert-todo-heading (arg)
+    (interactive "P")
+    (if arg (org-insert-todo-subheading arg)
+      (org-insert-todo-heading arg)))
+
   :bind (("C-c o a" . org-agenda)
          ("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
          ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/notes.org")))
          ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org")))
          ("C-c o b" . (lambda () (interactive) (let ((default-directory "~/Desktop/org/"))
-                                                  (call-interactively 'find-file))))
-)
+                                                 (call-interactively 'find-file))))
+         )
   (:map org-mode-map
         ("C-c o u" . org-move-subtree-up)
         ("C-c o d" . org-move-subtree-down)
@@ -645,10 +658,11 @@ Uses the appropriate comment syntax for the current major mode."
         ("C-c C-." . org-time-stamp-inactive)
         ("C-c o e" . org-emphasize)
         ("C-c o i d" . org-insert-drawer)
-        ("C-c o i s" . org-insert-subheading)
-        ("C-c o i h" . org-insert-heading)
-        ("C-c o i t" . (lambda () (interactive)
-                         (progn 
+        ;("C-c o i s" . org-insert-subheading)
+        ("C-c o i h" . ag/org-insert-heading)
+        ("C-c o i t" . ag/org-insert-todo-heading)
+        ("C-c o i m" . (lambda () (interactive)
+                         (progn
                            (org-insert-heading (org-current-level))
                            (org-insert-time-stamp (current-time) t t nil nil nil))))
         ("M-g o" . consult-org-heading)
@@ -792,7 +806,7 @@ Uses the appropriate comment syntax for the current major mode."
          ("\\.h\\'" . c-or-c++-ts-mode)
          ("\\.hpp\\'" . c++-ts-mode))
   :preface
-  (defun mp-setup-install-grammars ()
+  (defun ag/setup-install-grammars ()
     "Install Tree-sitter grammars if they are absent."
     (interactive)
     (dolist (grammar
@@ -810,7 +824,8 @@ Uses the appropriate comment syntax for the current major mode."
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
                (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
-               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
+               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+               (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0"))))
       (add-to-list 'treesit-language-source-alist grammar)
       ;; Only install `grammar' if we don't already have it
       ;; installed. However, if you want to *update* a grammar then
@@ -831,7 +846,7 @@ Uses the appropriate comment syntax for the current major mode."
              (js-json-mode . json-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
-  (mp-setup-install-grammars))
+  (ag/setup-install-grammars))
 
 (use-package uniquify
   :straight (:type built-in)
@@ -840,29 +855,14 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package vertico
   :init
   (vertico-mode)
+  (add-to-list 'vertico-multiform-categories
+               '(buffer (vertico-sort-function . nil))
+               '(jinx grid (vertico-grid-annotate . 20) (vertico-count . 4)))
   (vertico-multiform-mode)
   :custom
-  (vertico-resize nil)
   (vertico-count 20))
 
 (use-package wat-ts-mode)
-
-
-(defun my-ediff-setup-windows-in-new-frame (buffer-A buffer-B buffer-C control-buffer)
-  "Set up ediff windows in a new frame."
-  (let ((new-frame (make-frame)))
-    (select-frame new-frame)
-    (delete-other-windows)
-    (split-window-horizontally)
-    (switch-to-buffer buffer-A)
-    (other-window 1)
-    (switch-to-buffer buffer-B)
-    (when buffer-C
-      (split-window-vertically)
-      (other-window 1)
-      (switch-to-buffer buffer-C))))
-
-;;(setq ediff-window-setup-function 'my-ediff-setup-windows-in-new-frame)
 
 (use-package csv-mode)
 
