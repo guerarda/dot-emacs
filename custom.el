@@ -48,7 +48,6 @@
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
  '(llvm-ts-mode-indent-level 4)
- '(magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
  '(markdown-command "pandoc")
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages

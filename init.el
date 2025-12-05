@@ -599,8 +599,8 @@ Uses the appropriate comment syntax for the current major mode."
               ("C-x 3" . magit-section-show-level-3-all)
               ("C-x 4" . magit-section-show-level-4-all))
   :custom
-  (magit-diff-paint-whitespace-lines 'both)
-  (magit-git-executable "git"))
+  (magit-git-executable "git")
+  (magit-section-visibility-indicators '((magit-fringe-bitmap> . magit-fringe-bitmapv) (">" . t))))
 
 (use-package marginalia
   :after vertico
