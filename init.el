@@ -823,6 +823,8 @@ Uses the appropriate comment syntax for the current major mode."
                (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+               (wat . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wat/src"))
+               (wast . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wast/src"))
                (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
                (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
                (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0"))))
