@@ -305,9 +305,10 @@ Uses the appropriate comment syntax for the current major mode."
   :straight (:type built-in)
   :mode ("\\.py\\'" . python-ts-mode))
 
-(use-package rust-ts-mode
-  :straight (:type built-in)
-  :mode ("\\.rs\\'" . rust-ts-mode))
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t)
+  :mode ("\\.rs\\'" . rust-mode))
 
 ;; Packages
 ;;
@@ -495,7 +496,7 @@ Uses the appropriate comment syntax for the current major mode."
     json-ts-mode
     python-ts-mode
     typescript-ts-mode
-    rust-ts-mode) . eglot-ensure))
+    rust-mode) . eglot-ensure))
 
 (use-package emacs
   :custom
