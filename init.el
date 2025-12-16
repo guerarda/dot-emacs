@@ -389,6 +389,14 @@ Uses the appropriate comment syntax for the current major mode."
   (corfu-max-width 80)
   (corfu-min-width 40))
 
+(use-package consult-notes
+  :straight (:type git :host github :repo "mclear-tools/consult-notes")
+  :commands (consult-notes
+             consult-notes-search-in-all-notes)
+  :bind ("C-c n d" . consult-notes)
+  :custom
+  (consult-notes-file-dir-sources  '(("Org" ?o "~/Desktop/org/"))))
+
 (use-package corfu
   :after cape
   :bind (:map corfu-map
@@ -424,7 +432,6 @@ Uses the appropriate comment syntax for the current major mode."
           (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
         (deft-base-filename file))))
   (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
-  :bind ("C-c n d" . deft)
   :custom
   ;; (deft-strip-summary-regexp "\\`\\(.+\n\\)+\n")
   (deft-recursive t)
