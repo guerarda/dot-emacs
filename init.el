@@ -641,13 +641,13 @@ Uses the appropriate comment syntax for the current major mode."
   :preface
   (defun ag/org-insert-heading (arg)
     (interactive "P")
-    (if arg (org-insert-subheading arg)
+    (if arg (org-insert-subheading nil)
       (org-insert-heading)))
 
   (defun ag/org-insert-todo-heading (arg)
     (interactive "P")
-    (if arg (org-insert-todo-subheading arg)
-      (org-insert-todo-heading arg)))
+    (if arg (org-insert-todo-subheading nil)
+      (org-insert-todo-heading nil)))
 
   :bind (("C-c o a" . org-agenda)
          ("C-c o c" . org-capture)
