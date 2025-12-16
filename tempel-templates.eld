@@ -103,6 +103,20 @@ c-ts-mode c++-ts-mode
     "//" (make-string 78 45) q)
 
 
-rust-ts-mode
+rust-mode rust-ts-mode
+
+(fn "fn " p "(" p ") {" n> q n "}")
+(fnr "fn " p "(" p ") -> " p " {" n> q n "}")
+
+(struct & "struct " p " {" n> q n "}" >)
+
+(at & "#[" p "]" q)
+(drv & "#[derive(" p ")]" q)
+(cfg & "#[cfg(" p ")]" q)
 
 (pln "println!(\"" p "\", " p ");" n> q)
+
+
+
+
+
