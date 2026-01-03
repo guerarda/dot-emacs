@@ -85,6 +85,11 @@
 (bind-key* "M-2" #'split-window-vertically)
 (bind-key* "M-3" #'split-window-horizontally)
 
+;; Dont use C-Mouse Scroll to adjust text
+(global-set-key (kbd "<pinch>") 'ignore)
+(global-set-key (kbd "<C-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-wheel-down>") 'ignore)
+
 ;; use ' instead of quote when saving customization
 (defadvice custom-save-all (around custom-save-all-around)
   "Use abbreviated quotes for customize."
@@ -355,6 +360,7 @@ Uses the appropriate comment syntax for the current major mode."
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
          ("M-g g" . consult-goto-line)
+         ("M-g f" . consult-flymake)
          ("M-y" . consult-yank-pop)
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)
@@ -419,26 +425,6 @@ Uses the appropriate comment syntax for the current major mode."
          ("C-c w l" . crux-downcase-region)
          ("C-c w p" . crux-capitalize-region)))
 
-(use-package deft
-  :after org
-  :init
-  (defun cm/deft-parse-title (file contents)
-    "Parse the given FILE and CONTENTS and determine the title.
-  If `deft-use-filename-as-title' is nil, the title is taken to
-  be the first non-empty line of the FILE.  Else the base name of the FILE is
-  used as title."
-    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-      (if begin
-          (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-        (deft-base-filename file))))
-  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
-  :custom
-  ;; (deft-strip-summary-regexp "\\`\\(.+\n\\)+\n")
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory "~/Desktop/org/"))
-
 (use-package delsel
   :straight (:type built-in)
   :hook (after-init . delete-selection-mode))
@@ -497,6 +483,11 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package eglot
   :init
   (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
+  :bind (:map eglot-mode-map
+              ("C-c c a" . eglot-code-actions)
+              ("C-c c r" . eglot-rename)
+              ("C-c c h" . eglot-inlay-hints-mode)
+              ("C-c c f" . eglot-code-action-quickfix))
   :hook
   ((css-ts-mode
     js-ts-mode

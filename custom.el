@@ -23,7 +23,7 @@
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(dired-dwim-target t)
- '(display-line-numbers-width-start t)
+ '(display-line-numbers-width-start 4)
  '(ediff-diff-options "-w")
  '(ediff-split-window-function 'split-window-horizontally)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)

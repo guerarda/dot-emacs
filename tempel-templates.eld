@@ -107,6 +107,7 @@ rust-mode rust-ts-mode
 
 (fn "fn " p "(" p ") {" n> q n "}")
 (fnr "fn " p "(" p ") -> " p " {" n> q n "}")
+(lp "loop {" n> q n "}" > q)
 
 (struct & "struct " p " {" n> q n "}" >)
 
@@ -114,6 +115,7 @@ rust-mode rust-ts-mode
 (drv & "#[derive(" p ")]" q)
 (cfg & "#[cfg(" p ")]" q)
 
+(dbg & "dbg!(" q ")")
 (pln "println!(\"" p "\", " p ");" n> q)
 
 
