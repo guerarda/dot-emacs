@@ -498,6 +498,7 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package emacs
   :custom
+  (frame-resize-pixelwise t)
   (tab-always-indent 'complete)
   (text-mode-ispell-word-completion nil)
   (which-key-mode t)
@@ -745,6 +746,7 @@ Uses the appropriate comment syntax for the current major mode."
                       :lighter " isort")
   (reformatter-define rust-format
                       :program  "rustfmt"
+                      :args (list "--style-edition" "2024")
                       :lighter " fmt"))
 
 (use-package recentf
