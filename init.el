@@ -488,6 +488,9 @@ Uses the appropriate comment syntax for the current major mode."
               ("C-c c r" . eglot-rename)
               ("C-c c h" . eglot-inlay-hints-mode)
               ("C-c c f" . eglot-code-action-quickfix))
+  :config (add-to-list 'eglot-server-programs
+                       `(rust-mode . ("rust-analyzer" :initializationOptions
+                                      (:assist (:preferSelf t)))))
   :hook
   ((css-ts-mode
     js-ts-mode
