@@ -749,7 +749,7 @@ Uses the appropriate comment syntax for the current major mode."
                       :lighter " isort")
   (reformatter-define rust-format
                       :program  "rustfmt"
-                      :args (list "--style-edition" "2024")
+                      :args (list "--edition" "2024")
                       :lighter " fmt"))
 
 (use-package recentf
