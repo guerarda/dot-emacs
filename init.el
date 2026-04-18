@@ -65,6 +65,8 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 
+(setq insert-directory-program "ls")
+
 ;; Prefer UTF-8
 (prefer-coding-system 'utf-8)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
@@ -583,6 +585,7 @@ Uses the appropriate comment syntax for the current major mode."
   :bind ("M-%" . ispell-word))
 
 (use-package jinx
+  :straight nil
   :after vertico
   :hook ((text-mode . jinx-mode))
   :bind (("M-i" . jinx-correct))
@@ -715,6 +718,8 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package nerd-icons-dired
   :after dired nerd-icons
   :hook (dired-mode . nerd-icons-dired-mode))
+
+(use-package nix-mode)
 
 (use-package paredit
   :bind (:map paredit-mode-map
@@ -861,10 +866,12 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package vertico
   :init
   (vertico-mode)
-  (add-to-list 'vertico-multiform-categories
-               '(buffer (vertico-sort-function . nil))
-               '(jinx grid (vertico-grid-annotate . 20) (vertico-count . 4)))
+  :config
   (vertico-multiform-mode)
+  (add-to-list 'vertico-multiform-categories
+               '(buffer (vertico-sort-function . nil)))
+  (add-to-list 'vertico-multiform-categories
+               '(jinx grid (vertico-grid-annotate . 20) (vertico-count . 4)))
   :custom
   (vertico-count 20))
 

@@ -18,12 +18,14 @@
                       (109 "Method" font-lock-function-name-face)
                       (112 "Property" font-lock-variable-name-face)))))
  '(corfu-auto t)
+ '(corfu-on-exact-match 'insert)
+ '(corfu-quit-at-boundary nil)
  '(deft-auto-save-interval 0.0)
  '(deft-filter-only-filenames t)
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
  '(dired-dwim-target t)
- '(display-line-numbers-width-start 4)
+ '(display-line-numbers-width 4)
  '(ediff-diff-options "-w")
  '(ediff-split-window-function 'split-window-horizontally)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -32,11 +34,8 @@
  '(eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)
- '(elfeed-search-filter "@6-months-ago -archive")
- '(elfeed-search-remain-on-entry t)
  '(enable-recursive-minibuffers t)
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
- '(frame-resize-pixelwise t)
  '(git-commit-summary-max-length 72)
  '(gptel-org-branching-context t)
  '(gptel-prompt-prefix-alist
@@ -52,7 +51,7 @@
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (racket . t) (js \.t)))
+     (racket . t) (js . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
@@ -60,7 +59,7 @@
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12\12%?\12#+begin_src %^{Language}\12%i\12#+end_src"
       :empty-lines-after 1 :prepend t)
      ("b" "Add a book entry" entry
-      (file+headline "~/Desktop/org/books.org" "2025")
+      (file+headline "~/Desktop/org/books.org" "2026")
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
@@ -128,7 +127,7 @@
  '(sentence-end-double-space nil)
  '(set-mark-command-repeat-pop t)
  '(vc-follow-symlinks nil)
- '(vertico-sort-function 'vertico-sort-history-alpha)
+ '(vertico-sort-function 'vertico-sort-history-length-alpha)
  '(visible-bell nil)
  '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)
@@ -150,6 +149,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 120 :width normal :foundry "nil" :family "Source Code Pro"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#282c34" :foreground "#bbc2cf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 125 :width normal :foundry "nil" :family "Source Code Pro"))))
  '(diff-hl-delete ((t nil)))
  '(diff-hl-insert ((t nil))))
