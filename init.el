@@ -523,10 +523,8 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package exec-path-from-shell
   ;; Ensure environment variables look the same as in the shell
-  :init
-  (when (daemonp)
-    (exec-path-from-shell-initialize))
-  (when (memq window-system '(mac ns x))
+  :config
+  (when (or (daemonp) (memq window-system '(mac ns x)))
     (exec-path-from-shell-initialize)))
 
 (use-package fd-dired
