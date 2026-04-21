@@ -402,8 +402,8 @@ Uses the appropriate comment syntax for the current major mode."
   :commands (consult-notes
              consult-notes-search-in-all-notes)
   :bind ("C-c n d" . consult-notes)
-  :custom
-  (consult-notes-file-dir-sources  '(("Org" ?o "~/Desktop/org/"))))
+  :config
+  (setq consult-notes-file-dir-sources '(("Org" ?o "~/Desktop/org/"))))
 
 (use-package corfu
   :after cape
