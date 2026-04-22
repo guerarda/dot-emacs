@@ -319,13 +319,6 @@ Uses the appropriate comment syntax for the current major mode."
 
 ;; Packages
 ;;
-(use-package aidermacs
-  :straight (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :config
-  (aidermacs-setup-minor-mode)
-  (setq aidermacs-use-architect-mode t))
-
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode)
   :config
