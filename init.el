@@ -152,6 +152,20 @@ When called with a prefix argument, only copies to the kill ring without modifyi
       (insert result))))
 (bind-key "C-c u" #'unfill-paragraph)
 
+(defun ag/path-to-org-link (bgn end)
+  "Replace region (a file path, optionally with ::line suffix) with an Org
+link displaying jsut the filename"
+  (interactive "r")
+  (let* ((raw (string-trim (buffer-substring-no-properties bgn end)))
+         (path (read-string "Path: " raw))
+         (line (and (string-match ":\\([0-9]+\\)\\'" path)
+                    (match-string 1 path)))
+         (file (if line (substring path 0 (match-beginning 0)) path))
+                  (name (file-name-nondirectory file))
+         (target (if line (format "%s::%s" file line) file))
+         (link (format "[[file:%s][%s]]" target name)))
+    (delete-region bgn end)
+    (insert link)))
 
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
@@ -316,6 +330,12 @@ Uses the appropriate comment syntax for the current major mode."
   :init
   (setq rust-mode-treesitter-derive t)
   :mode ("\\.rs\\'" . rust-mode))
+
+(use-package yaml-ts-mode
+  :straight (:type built-in)
+  :mode ("\\.yaml\\'" . yaml-ts-mode)
+  :init (setq js-indent-level 2))
+
 
 ;; Packages
 ;;
@@ -487,7 +507,8 @@ Uses the appropriate comment syntax for the current major mode."
                        `(rust-mode . ("rust-analyzer" :initializationOptions
                                       (:assist (:preferSelf t)))))
   :hook
-  ((css-ts-mode
+  ((c++-ts-mode
+    css-ts-mode
     js-ts-mode
     json-ts-mode
     python-ts-mode
@@ -577,6 +598,7 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package jinx
   :straight nil
+  :if (not (eq system-type 'windows-nt))
   :after vertico
   :hook ((text-mode . jinx-mode))
   :bind (("M-i" . jinx-correct))
@@ -611,14 +633,14 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package modern-cpp-font-lock
   :hook (c++-ts-mode . modern-c++-font-lock-mode))
 
-(use-package ob-racket
-  :after org
-  :config
-  (add-hook 'ob-racket-pre-runtime-library-load-hook
-              #'ob-racket-raco-make-runtime-library)
-  :straight (ob-racket
-               :type git :host github :repo "hasu/emacs-ob-racket"
-               :files ("*.el" "*.rkt")))
+;; (use-package ob-racket
+;;   :after org
+;;   :config
+;;   (add-hook 'ob-racket-pre-runtime-library-load-hook
+;;               #'ob-racket-raco-make-runtime-library)
+;;   :straight (ob-racket
+;;                :type git :host github :repo "hasu/emacs-ob-racket"
+;;                :files ("*.el" "*.rkt")))
 
 (use-package orderless
   :init
@@ -761,7 +783,8 @@ Uses the appropriate comment syntax for the current major mode."
   (rg-define-toggle "--sort path" "s" nil)
   :config
   (setq rg-custom-type-aliases
-        '(("bff" . "*.bff")))
+        '(("bff" . "*.bff")
+          ("nfo" . "*.nfo")))
   :custom (rg-executable "rg"))
 
 (use-package saveplace
@@ -807,37 +830,34 @@ Uses the appropriate comment syntax for the current major mode."
          ("\\.hpp\\'" . c++-ts-mode))
   :preface
   (defun ag/setup-install-grammars ()
-    "Install Tree-sitter grammars if they are absent."
+    "Install Tree-sitter grammars if they are absent on non-Windows systems."
     (interactive)
-    (dolist (grammar
-             ;; Note the version numbers. These are the versions that
-             ;; are known to work with Combobulate *and* Emacs.
-             '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
-               (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
-               (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
-               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
-               (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
-               (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
-               (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
-               (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
-               (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
-               (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
-               (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-               (wat . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wat/src"))
-               (wast . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wast/src"))
-               (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
-               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
-               (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0"))))
-      (add-to-list 'treesit-language-source-alist grammar)
-      ;; Only install `grammar' if we don't already have it
-      ;; installed. However, if you want to *update* a grammar then
-      ;; this obviously prevents that from happening.
-      (unless (treesit-language-available-p (car grammar))
-        (treesit-install-language-grammar (car grammar)))))
-
-  ;; You can remap major modes with `major-mode-remap-alist'. Note
-  ;; that this does *not* extend to hooks! Make sure you migrate them
-  ;; also
+    (unless (eq system-type 'windows-nt)
+      (dolist (grammar
+               ;; Note the version numbers. These are the versions that
+               ;; are known to work with Combobulate *and* Emacs.
+               '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
+                 (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+                 (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
+                 (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+                 (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
+                 (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+                 (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
+                 (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+                 (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
+                 (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+                 (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+                 (wat . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wat/src"))
+                 (wast . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wast/src"))
+                 (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
+                 (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+                 (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0"))))
+        (add-to-list 'treesit-language-source-alist grammar)
+        ;; Only install `grammar' if we don't already have it
+        ;; installed. However, if you want to *update* a grammar then
+        ;; this obviously prevents that from happening.
+        (unless (treesit-language-available-p (car grammar))
+          (treesit-install-language-grammar (car grammar))))))
   (dolist (mapping
            '((python-mode . python-ts-mode)
              (css-mode . css-ts-mode)
@@ -882,3 +902,7 @@ Uses the appropriate comment syntax for the current major mode."
 
 (use-package wgsl-ts-mode
   :straight (:type git :host github :repo "acowley/wgsl-ts-mode"))
+
+(let ((local-file (locate-user-emacs-file "init.local.el")))
+  (when (file-exists-p local-file)
+    (load local-file nil 'nomessage)))
