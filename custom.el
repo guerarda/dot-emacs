@@ -51,7 +51,7 @@
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (racket . t) (js . t)))
+     (js . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
@@ -66,6 +66,13 @@
       "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
       :prepend t :empty-lines-before 1 :empty-lines-after 1
       :kill-buffer t)
+     ("i" "Add an issue entry" entry (file "~/Desktop/org/todo.org")
+      "* TODO %^{Title}%^g\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
+      :prepend t :empty-lines-before 1 :empty-lines-after 1
+      :kill-buffer t)
+     ("l" "Add a code note" entry (file "~/Desktop/org/notes.org")
+      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12- %(let* ((buf (org-capture-get :original-buffer)) (file (and buf (buffer-file-name buf)))) (if (and file (buffer-live-p buf)) (format \"[[file:%s::%d][source]]\" file (with-current-buffer buf (line-number-at-pos))) \"\"))\12:END:\12%?\12%(let ((region (org-capture-get :initial))) (if (org-string-nw-p region) (format \"#+begin_src\n%s\n#+end_src\" (org-remove-indentation region)) \"\"))"
+      :prepend t :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("n" "Add a note entry" entry (file "~/Desktop/org/notes.org")
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
       :prepend t :empty-lines-before 1 :empty-lines-after 1)))
