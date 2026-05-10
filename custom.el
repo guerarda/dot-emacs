@@ -6,17 +6,20 @@
  '(bookmark-fringe-mark nil)
  '(c-ts-mode-indent-style 'linux)
  '(consult-imenu-config
-   '((emacs-lisp-mode :toplevel "Functions" :types
-                      ((102 "Functions" font-lock-function-name-face)
-                       (109 "Macros" font-lock-function-name-face)
-                       (112 "Packages" font-lock-constant-face)
-                       (116 "Types" font-lock-type-face)
-                       (118 "Variables" font-lock-variable-name-face)))
-     (python-ts-mode :toplevel "Function" :types
-                     ((102 "Function" font-lock-function-name-face)
-                      (99 "Class" font-lock-type-face)
-                      (109 "Method" font-lock-function-name-face)
-                      (112 "Property" font-lock-variable-name-face)))))
+   '((rust-mode :toplevel "Function" :types
+                ((102 "Function" font-lock-function-name-face)
+                 (115 "Struct" font-lock-type-face)
+                 (101 "Enum" font-lock-type-face)
+                 (109 "Method" font-lock-function-name-face)
+                 (105 "Object" font-lock-type-face)
+                 (111 "Module" font-lock-constant-face)))
+     (rust-ts-mode :toplevel "Function" :types
+                   ((102 "Function" font-lock-function-name-face)
+                    (115 "Struct" font-lock-type-face)
+                    (101 "Enum" font-lock-type-face)
+                    (109 "Method" font-lock-function-name-face)
+                    (105 "Object" font-lock-type-face)
+                    (111 "Module" font-lock-constant-face)))))
  '(corfu-auto t)
  '(corfu-on-exact-match 'insert)
  '(corfu-quit-at-boundary nil)
@@ -43,6 +46,7 @@
      (text-mode . "### ")))
  '(gptel-response-prefix-alist
    '((markdown-mode . "") (org-mode . "@assistant\12") (text-mode . "")))
+ '(help-at-pt-display-when-idle t nil (help-at-pt))
  '(isearch-lax-whitespace t)
  '(ispell-dictionary "en_US")
  '(list-matching-lines-default-context-lines 2)
@@ -51,7 +55,7 @@
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (js . t)))
+     (racket . t) (js . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
@@ -67,12 +71,9 @@
       :prepend t :empty-lines-before 1 :empty-lines-after 1
       :kill-buffer t)
      ("i" "Add an issue entry" entry (file "~/Desktop/org/todo.org")
-      "* TODO %^{Title}%^g\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
+      "* TODO %^{Title}  :%^{Tag|bug|feature|perf|research}:\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
       :prepend t :empty-lines-before 1 :empty-lines-after 1
       :kill-buffer t)
-     ("l" "Add a code note" entry (file "~/Desktop/org/notes.org")
-      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12- %(let* ((buf (org-capture-get :original-buffer)) (file (and buf (buffer-file-name buf)))) (if (and file (buffer-live-p buf)) (format \"[[file:%s::%d][source]]\" file (with-current-buffer buf (line-number-at-pos))) \"\"))\12:END:\12%?\12%(let ((region (org-capture-get :initial))) (if (org-string-nw-p region) (format \"#+begin_src\n%s\n#+end_src\" (org-remove-indentation region)) \"\"))"
-      :prepend t :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("n" "Add a note entry" entry (file "~/Desktop/org/notes.org")
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
       :prepend t :empty-lines-before 1 :empty-lines-after 1)))
