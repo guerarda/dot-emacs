@@ -663,7 +663,7 @@ Uses the appropriate comment syntax for the current major mode."
   :bind (("C-c o a" . org-agenda)
          ("C-c o c" . org-capture)
          ("C-c o l" . org-store-link)
-         ("C-c o n" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/notes.org")))
+         ("C-c o n" . org-add-note)
          ("C-c o t" . (lambda () (interactive) (find-file-other-window "~/Desktop/org/todo.org")))
          ("C-c o b" . (lambda () (interactive) (let ((default-directory "~/Desktop/org/"))
                                                  (call-interactively 'find-file))))
