@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(bookmark-fringe-mark nil)
  '(c-ts-mode-indent-style 'linux)
+ '(consult-async-min-input 5)
  '(consult-imenu-config
    '((rust-mode :toplevel "Function" :types
                 ((102 "Function" font-lock-function-name-face)
@@ -38,12 +39,12 @@
  '(electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
  '(electric-pair-mode t)
  '(enable-recursive-minibuffers t)
+ '(fill-column 80)
  '(flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list)
  '(git-commit-summary-max-length 72)
  '(gptel-org-branching-context t)
  '(gptel-prompt-prefix-alist
-   '((markdown-mode . "### ") (org-mode . "@user\12")
-     (text-mode . "### ")))
+   '((markdown-mode . "### ") (org-mode . "@user\12") (text-mode . "### ")))
  '(gptel-response-prefix-alist
    '((markdown-mode . "") (org-mode . "@assistant\12") (text-mode . "")))
  '(help-at-pt-display-when-idle t nil (help-at-pt))
@@ -55,7 +56,7 @@
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (racket . t) (js . t)))
+     (js . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
@@ -67,16 +68,14 @@
       "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
-      "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
-      :prepend t :empty-lines-before 1 :empty-lines-after 1
-      :kill-buffer t)
+      "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :prepend t
+      :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("i" "Add an issue entry" entry (file "~/Desktop/org/todo.org")
-      "* TODO %^{Title}  :%^{Tag|bug|feature|perf|research}:\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
-      :prepend t :empty-lines-before 1 :empty-lines-after 1
-      :kill-buffer t)
+      "* TODO %^{Title}^g\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
+      :prepend t :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("n" "Add a note entry" entry (file "~/Desktop/org/notes.org")
-      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?"
-      :prepend t :empty-lines-before 1 :empty-lines-after 1)))
+      "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :prepend t
+      :empty-lines-before 1 :empty-lines-after 1)))
  '(org-confirm-babel-evaluate nil)
  '(org-fontify-whole-heading-line nil)
  '(org-hide-leading-stars t)
@@ -97,21 +96,19 @@
  '(org-src-fontify-natively t)
  '(org-src-lang-modes
    '(("docker" . dockerfile-ts) ("rust" . rust-ts) ("json" . json-ts)
-     ("python" . python-ts) ("C" . c-ts) ("C++" . c++-ts)
-     ("calc" . fundamental) ("cpp" . c++-ts) ("dot" . fundamental)
-     ("elisp" . emacs-lisp) ("ocaml" . tuareg) ("sqlite" . sql)
-     ("toml" . conf-toml) ("shell" . sh) ("sh" . sh) ("bash" . sh)
-     ("rc" . sh) ("posix" . sh) ("wsh" . sh) ("zsh" . sh) ("rpm" . sh)
-     ("wat" . wat-ts)))
+     ("python" . python-ts) ("C" . c-ts) ("C++" . c++-ts) ("calc" . fundamental)
+     ("cpp" . c++-ts) ("dot" . fundamental) ("elisp" . emacs-lisp)
+     ("ocaml" . tuareg) ("sqlite" . sql) ("toml" . conf-toml) ("shell" . sh)
+     ("sh" . sh) ("bash" . sh) ("rc" . sh) ("posix" . sh) ("wsh" . sh)
+     ("zsh" . sh) ("rpm" . sh) ("wat" . wat-ts)))
  '(org-src-preserve-indentation t)
  '(org-src-tab-acts-natively t)
  '(org-todo-keyword-faces
    '(("TODO" . "red") ("PROGRESS" . "orange") ("WAITING" . "dark cyan")
-     ("REVIEW" . "yellow") ("SHELVED" . "pale green")
-     ("DONE" . "dark green")))
+     ("REVIEW" . "yellow") ("SHELVED" . "pale green") ("DONE" . "dark green")))
  '(org-todo-keywords
-   '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)"
-               "REVIEW(r)" "|" "CANCELLED(c)" "DONE(d)")))
+   '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)" "REVIEW(r)" "|"
+               "CANCELLED(c)" "DONE(d)")))
  '(org-use-speed-commands t)
  '(orgit-store-reference t)
  '(project-switch-commands 'magit-project-status)
@@ -130,8 +127,8 @@
                (pop-to-buffer buffer)
                (when (get-buffer-process buffer)
                  (delete-process (get-buffer-process buffer)))
-               (make-comint-in-buffer "Lox Interpreter" buffer
-                                      "python" nil "lox.py"))))))
+               (make-comint-in-buffer "Lox Interpreter" buffer "python" nil
+                                      "lox.py"))))))
  '(sentence-end-double-space nil)
  '(set-mark-command-repeat-pop t)
  '(vc-follow-symlinks nil)
@@ -140,8 +137,8 @@
  '(wat-ts-mode-indent-level 4)
  '(whitespace-line-column 80)
  '(whitespace-style
-   '(face trailing tabs spaces lines-tail newline empty indentation
-          space-after-tab space-before-tab))
+   '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab
+          space-before-tab))
  '(xref-prompt-for-identifier
    '(not xref-find-definitions xref-find-definitions-other-window
          xref-find-definitions-other-frame xref-find-references)))

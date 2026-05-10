@@ -211,6 +211,21 @@ The DWIM behaviour of this command is as follows:
   (interactive)
   (insert (format-time-string "%a %b %e %H:%M:%S %Z %Y")))
 
+(defun ag/copy-code-block-with-source ()
+  "Copy region as an Org src block with a caption link to file:line."
+  (interactive)
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (let* ((file (buffer-file-name))
+         (line (line-number-at-pos (region-beginning)))
+         (raw (buffer-substring-no-properties (region-beginning) (region-end)))
+         (text (org-remove-indentation raw))
+         (name (file-name-nondirectory file))
+         (block (format "[[file:%s::%d][%s]]\n#+begin_src\n%s\n#+end_src\n"
+                        file line name text)))
+    (kill-new block)
+    (message "Code block with source link copied")))
+
 (defun my-project-flush-lines (regex file-extension)
   "Flush lines matching REGEX in all project files with FILE-EXTENSION.
 Similar to `flush-lines` but operates on all project files."
@@ -290,6 +305,7 @@ Uses the appropriate comment syntax for the current major mode."
 ;;
 (use-package prog-mode
   :straight (:type built-in)
+  :bind (("C-c C-o" . ff-find-other-file))
   :hook (prog-mode . (lambda ()
                        (display-line-numbers-mode)
                        (setq compilation-ask-about-save nil)
@@ -688,6 +704,7 @@ Uses the appropriate comment syntax for the current major mode."
         ("C-c C-v k" . org-babel-remove-result-one-or-many)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
+  :hook (org-mode . (lambda () (setq-local fill-column 100)))
   :custom
   (org-startup-indented t)
   :config
