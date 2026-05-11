@@ -64,8 +64,8 @@
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12\12%?\12#+begin_src %^{Language}\12%i\12#+end_src"
       :empty-lines-after 1 :prepend t)
      ("b" "Add a book entry" entry
-      (file+headline "~/Desktop/org/books.org" "2026")
-      "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
+      (file+headline "~/Desktop/org/books.org" "Not read")
+      "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  \12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
       "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :prepend t
