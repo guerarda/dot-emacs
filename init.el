@@ -103,6 +103,8 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+(setq lock-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 (defun unfill-paragraph (beg end &optional copy-only)
   "Remove line breaks in the region from BEG to END,
@@ -534,12 +536,13 @@ Uses the appropriate comment syntax for the current major mode."
 (use-package emacs
   :custom
   (frame-resize-pixelwise t)
-  (tab-always-indent 'complete)
+  (tab-always-indent t)
   (text-mode-ispell-word-completion nil)
   (which-key-mode t)
   :config
   (setq truncate-lines t)
   :bind (("M-z" . zap-up-to-char)
+         ("M-TAB" . completion-at-point)
          ("C-x C-b" . ibuffer)
          ("C-c d" . duplicate-dwim)))
 
