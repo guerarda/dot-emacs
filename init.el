@@ -662,7 +662,9 @@ Uses the appropriate comment syntax for the current major mode."
   :init
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion)))
+        completion-ignore-case t
+        read-file-name-completion-ignore-case t))
 
 (use-package org
   :preface
@@ -704,7 +706,7 @@ Uses the appropriate comment syntax for the current major mode."
         ("C-c C-v k" . org-babel-remove-result-one-or-many)
         ("M-p" . org-metaup)
         ("M-n" . org-metadown))
-  :hook (org-mode . (lambda () (setq-local fill-column 100)))
+  :hook (org-mode . (lambda () (setq-local fill-column 80)))
   :custom
   (org-startup-indented t)
   :config
