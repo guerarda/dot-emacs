@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(bookmark-fringe-mark nil)
  '(c-ts-mode-indent-style 'linux)
+ '(calendar-week-start-day 1)
  '(consult-async-min-input 5)
  '(consult-imenu-config
    '((rust-mode :toplevel "Function" :types
@@ -64,14 +65,14 @@
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12\12%?\12#+begin_src %^{Language}\12%i\12#+end_src"
       :empty-lines-after 1 :prepend t)
      ("b" "Add a book entry" entry
-      (file+headline "~/Desktop/org/books.org" "Not read")
-      "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  \12:Finished:\12:END:"
+      (file+headline "~/Desktop/org/books.org" "2026")
+      "** %^{Book title}\12:PROPERTIES:\12:Title:    %\\1\12:Author:   %^{Author}\12:Year:     %^{Year}\12:Started:  %^u\12:Finished:\12:END:"
       :empty-lines-after 1 :kill-buffer t)
      ("t" "Add a TODO entry" entry (file "~/Desktop/org/todo.org")
       "* TODO %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :prepend t
       :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("i" "Add an issue entry" entry (file "~/Desktop/org/todo.org")
-      "* TODO %^{Title}^g\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
+      "* TODO %^{Title}  %^g\12:LOGBOOK:\12- Created on %U\12- [[%L][source]]\12:END:\12%?"
       :prepend t :empty-lines-before 1 :empty-lines-after 1 :kill-buffer t)
      ("n" "Add a note entry" entry (file "~/Desktop/org/notes.org")
       "* %^{Title}\12:LOGBOOK:\12- Created on %U\12:END:\12%?" :prepend t
