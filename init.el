@@ -156,7 +156,7 @@ When called with a prefix argument, only copies to the kill ring without modifyi
 
 (defun ag/path-to-org-link (bgn end)
   "Replace region (a file path, optionally with ::line suffix) with an Org
-link displaying jsut the filename"
+link displaying just the filename"
   (interactive "r")
   (let* ((raw (string-trim (buffer-substring-no-properties bgn end)))
          (path (read-string "Path: " raw))
@@ -571,7 +571,7 @@ With optional argument FRAME, return the list of buffers of FRAME."
 (use-package emacs
   :custom
   (frame-resize-pixelwise t)
-  (tab-always-indent t)
+  (tab-always-indent 'complete)
   (text-mode-ispell-word-completion nil)
   (which-key-mode t)
   :config

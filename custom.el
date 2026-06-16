@@ -7,7 +7,7 @@
  '(bookmark-fringe-mark nil)
  '(c-ts-mode-indent-style 'linux)
  '(calendar-week-start-day 1)
- '(consult-async-min-input 5)
+ '(consult-async-min-input 3)
  '(consult-imenu-config
    '((rust-mode :toplevel "Function" :types
                 ((102 "Function" font-lock-function-name-face)
@@ -57,8 +57,7 @@
  '(markdown-command "pandoc")
  '(org-agenda-files '("~/Desktop/org"))
  '(org-babel-load-languages
-   '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t)
-     (js . t)))
+   '((emacs-lisp . t) (awk . t) (C . t) (shell . t) (python . t) (js . t)))
  '(org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
  '(org-bookmark-names-plist nil)
  '(org-capture-templates
