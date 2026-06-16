@@ -169,6 +169,19 @@ link displaying jsut the filename"
     (delete-region bgn end)
     (insert link)))
 
+(defun ag/org-insert-id-from-refile-target ()
+  "Pick a heading via the refile interface and insert its org-id at point.
+Creates the ID if the target heading doesn't have one yet."
+  (interactive)
+  (let* ((target (org-refile-get-location "Insert ID of"))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (id (save-excursion
+               (with-current-buffer (find-file-noselect file)
+                 (goto-char pos)
+                 (org-id-get-create)))))
+    (insert id)))
+
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
         c-basic-offset 4)
@@ -386,6 +399,14 @@ With optional argument FRAME, return the list of buffers of FRAME."
   (setq consult-buffer-list-function #'consult-beframe-buffer-list)
   :bind
   (("C-c b" . beframe-transient)))
+
+(use-package browse-url
+  :straight (:type built-in)
+  :config
+  (add-to-list 'browse-url-handlers
+               (cons "\\`id:"
+                     (lambda (url &rest _)
+                       (org-link-open-from-string (format "[[%s]]" url))))))
 
 (use-package cape)
 
@@ -644,12 +665,22 @@ With optional argument FRAME, return the list of buffers of FRAME."
 (use-package llvm-ts-mode)
 
 (use-package magit
+  :preface
+  (defun ag/magit-enable-org-id-bug-reference ()
+    "Enable `bug-reference-mode' tuned for org-id:UUID strings."
+    (setq-local bug-reference-bug-regexp
+                "\\(org-id:\\s-*\\([0-9A-Fa-f-]\\{36\\}\\)\\)")
+    (setq-local bug-reference-url-format
+                (lambda () (format "id:%s" (match-string 2))))
+    (bug-reference-mode 1))
   :bind (("C-x g" . magit-status))
   :bind (:map magit-mode-map
               ("C-x 1" . magit-section-show-level-1-all)
               ("C-x 2" . magit-section-show-level-2-all)
               ("C-x 3" . magit-section-show-level-3-all)
               ("C-x 4" . magit-section-show-level-4-all))
+  :hook ((magit-revision-mode . ag/magit-enable-org-id-bug-reference)
+         (magit-log-mode      . ag/magit-enable-org-id-bug-reference))
   :custom
   (magit-git-executable "git")
   (magit-section-visibility-indicators '((magit-fringe-bitmap> . magit-fringe-bitmapv) (">" . t))))
