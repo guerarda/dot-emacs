@@ -373,6 +373,20 @@ Uses the appropriate comment syntax for the current major mode."
   :hook ((beancount-mode . (lambda () (electric-indent-local-mode -1)))
          (beancount-mode . outline-minor-mode)) )
 
+(use-package beframe
+  :hook (after-init . beframe-mode)
+  :preface
+  (defun consult-beframe-buffer-list (&optional frame)
+    "Return the list of buffers from `beframe-buffer-names' sorted by visibility.
+With optional argument FRAME, return the list of buffers of FRAME."
+    (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
+
+  :config
+  (setq beframe-functions-in-frames '(project-prompt-project-dir))
+  (setq consult-buffer-list-function #'consult-beframe-buffer-list)
+  :bind
+  (("C-c b" . beframe-transient)))
+
 (use-package cape)
 
 (use-package cmake-font-lock
