@@ -761,7 +761,10 @@ With optional argument FRAME, return the list of buffers of FRAME."
   (subword-mode 1)
   (setq org-agenda-files '("~/Desktop/org")))
 
-(use-package orgit)
+(use-package orgit
+  :custom
+  (orgit-rev-description-format "%h - %s")
+  (orgit-store-reference t))
 
 (use-package org-journal
   :preface

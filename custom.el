@@ -111,7 +111,6 @@
    '((sequence "TODO(t)" "PROGRESS(p)" "WAITING(w)" "SHELVED(s)" "REVIEW(r)" "|"
                "CANCELLED(c)" "DONE(d)")))
  '(org-use-speed-commands t)
- '(orgit-store-reference t)
  '(project-switch-commands 'magit-project-status)
  '(project-vc-extra-root-markers '("pyproject.toml" "Cargo.toml" "package.json" ".project"))
  '(python-shell-interpreter "python3")
