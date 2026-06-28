@@ -534,6 +534,9 @@ With optional argument FRAME, return the list of buffers of FRAME."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; https://github.com/doomemacs/themes/issues/875
+  (setcdr (assoc 'gnus-group-news-low-empty doom-themes-base-faces)
+          '(:inherit 'gnus-group-mail-1-empty :weight 'normal))
   (load-theme 'doom-one t)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
