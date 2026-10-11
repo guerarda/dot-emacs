@@ -169,11 +169,15 @@ link displaying just the filename"
     (delete-region bgn end)
     (insert link)))
 
-(defun ag/org-insert-id-from-refile-target ()
+(defun ag/org-insert-id-from-refile-target (&optional verify-function)
   "Pick a heading via the refile interface and insert its org-id at point.
-Creates the ID if the target heading doesn't have one yet."
+Creates the ID if the target heading doesn't have one yet.
+With optional VERIFY-FUNCTION, restrict the candidates by binding it to
+`org-refile-target-verify-function'."
   (interactive)
-  (let* ((target (org-refile-get-location "Insert ID of"))
+  (let* ((org-refile-target-verify-function
+          (or verify-function org-refile-target-verify-function))
+         (target (org-refile-get-location "Insert ID of"))
          (file (nth 1 target))
          (pos (nth 3 target))
          (id (save-excursion
@@ -181,6 +185,14 @@ Creates the ID if the target heading doesn't have one yet."
                  (goto-char pos)
                  (org-id-get-create)))))
     (insert id)))
+
+(defun ag/org-insert-id-from-todo-target ()
+  "Pick a not-done TODO heading via the refile interface and insert its org-id.
+Like `ag/org-insert-id-from-refile-target', but the picker only offers
+headings whose current state is an unfinished TODO keyword."
+  (interactive)
+  (ag/org-insert-id-from-refile-target
+   (lambda () (org-entry-is-todo-p))))
 
 (defun my-c-mode-hook ()
   (setq c-default-style "linux"
@@ -320,7 +332,7 @@ Uses the appropriate comment syntax for the current major mode."
 ;;
 (use-package prog-mode
   :straight (:type built-in)
-  :bind (("C-c C-o" . ff-find-other-file))
+  :bind (("C-c C-o" . ff-get-other-file))
   :hook (prog-mode . (lambda ()
                        (display-line-numbers-mode)
                        (setq compilation-ask-about-save nil)
@@ -464,7 +476,7 @@ With optional argument FRAME, return the list of buffers of FRAME."
   (corfu-min-width 40))
 
 (use-package consult-notes
-  :straight (:type git :host github :repo "mclear-tools/consult-notes")
+  :straight (:type git :host codeberg :repo "mclear-tools/consult-notes")
   :commands (consult-notes
              consult-notes-search-in-all-notes)
   :bind ("C-c n d" . consult-notes)
