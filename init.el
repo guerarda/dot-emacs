@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;; Straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -323,7 +324,7 @@ Uses the appropriate comment syntax for the current major mode."
 (bind-key* "C-c C-f"
            (lambda (arg)
              (interactive "P")
-             (when-let ((filename (buffer-file-name)))
+             (when-let* ((filename (buffer-file-name)))
                (kill-new (if arg
                              filename
                            (file-name-nondirectory filename))))))
@@ -489,11 +490,11 @@ With optional argument FRAME, return the list of buffers of FRAME."
               ("C-SPC" . corfu-insert-separator))
   :custom
   (corfu-separator ?\s)
+  (corfu-quit-no-match t)
   :hook
   ((prog-mode . corfu-mode)
    (shell-mode . corfu-mode))
   :init
-  (global-corfu-mode)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 (use-package crux
@@ -511,8 +512,9 @@ With optional argument FRAME, return the list of buffers of FRAME."
 
 (use-package diff-hl
   :after magit
-  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
-  :init
+  :hook ((magit-post-refresh . diff-hl-magit-post-refresh)
+         (prog-mode . diff-hl-mode))
+    :init
   (global-diff-hl-mode))
 
 (use-package dired
@@ -552,16 +554,6 @@ With optional argument FRAME, return the list of buffers of FRAME."
   (load-theme 'doom-one t)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
-
-(use-package eat
-  :straight (:type git
-             :host codeberg
-             :repo "akib/emacs-eat"
-             :files ("*.el" ("term" "term/*.el") "*.texi"
-                     "*.ti" ("terminfo/e" "terminfo/e/*")
-                     ("terminfo/65" "terminfo/65/*")
-                     ("integration" "integration/*")
-                     (:exclude ".dir-locals.el" "*-tests.el"))))
 
 (use-package eglot
   :init
@@ -613,16 +605,6 @@ With optional argument FRAME, return the list of buffers of FRAME."
 (use-package fd-dired
   :bind (("C-c s f" . fd-dired)))
 
-(use-package gptel
-  :init
-  (setq gptel-model 'claude-sonnet-4-20250514
-        gptel-backend (gptel-make-anthropic "Claude"
-                                            :stream t :key gptel-api-key))
-  (gptel-make-gemini "Gemini" :stream t :key gptel-api-key)
-  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
-  :custom
-  (gptel-default-mode 'org-mode))
-
 (use-package helpful
   :bind (("C-h f" . helpful-callable)
          ("C-h k" . helpful-key)
@@ -672,7 +654,8 @@ With optional argument FRAME, return the list of buffers of FRAME."
   :hook ((text-mode . jinx-mode))
   :bind (("M-i" . jinx-correct))
   :config
-  (unbind-key "M-$" jinx-correct)
+  ;; Keep `ispell-word' as is; jinx is on M-i
+  (keymap-unset jinx-mode-map "<remap> <ispell-word>")
   :custom
   (jinx-camel-modes '(prog-mode))
   (jinx-delay 0.1))
@@ -777,6 +760,8 @@ With optional argument FRAME, return the list of buffers of FRAME."
   (setq org-agenda-files '("~/Desktop/org")))
 
 (use-package orgit
+  :config
+  (load (expand-file-name "org-commit.el" user-emacs-directory))
   :custom
   (orgit-rev-description-format "%h - %s")
   (orgit-store-reference t))
@@ -915,28 +900,16 @@ With optional argument FRAME, return the list of buffers of FRAME."
          ("\\.hpp\\'" . c++-ts-mode))
   :preface
   (defun ag/setup-install-grammars ()
-    "Install Tree-sitter grammars if they are absent on non-Windows systems."
+    "Install Tree-sitter grammars that don't ship a recipe with Emacs."
     (interactive)
     (unless (eq system-type 'windows-nt)
       (dolist (grammar
-               ;; Note the version numbers. These are the versions that
-               ;; are known to work with Combobulate *and* Emacs.
-               '((c . ("https://github.com/tree-sitter/tree-sitter-c"))
-                 (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
-                 (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
-                 (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
-                 (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
-                 (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
-                 (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
+               '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
                  (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
-                 (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
-                 (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
-                 (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
                  (wat . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wat/src"))
                  (wast . ("https://github.com/wasm-lsp/tree-sitter-wasm" nil "wast/src"))
                  (wgsl . ("https://github.com/szebniok/tree-sitter-wgsl"))
-                 (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
-                 (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile" "v0.2.0"))))
+                 (llvm . ("https://github.com/benwilliamgraham/tree-sitter-llvm"))))
         (add-to-list 'treesit-language-source-alist grammar)
         ;; Only install `grammar' if we don't already have it
         ;; installed. However, if you want to *update* a grammar then
@@ -952,6 +925,8 @@ With optional argument FRAME, return the list of buffers of FRAME."
              (json-mode . json-ts-mode)
              (js-json-mode . json-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
+  :custom
+  (treesit-auto-install-grammar 'always)
   :config
   (ag/setup-install-grammars))
 

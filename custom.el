@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -30,6 +31,7 @@
  '(deft-filter-only-filenames t)
  '(deft-use-filename-as-title nil)
  '(diff-font-lock-refine nil)
+ '(diff-hl-global-modes nil)
  '(dired-dwim-target t)
  '(display-line-numbers-width 4)
  '(ediff-diff-options "-w")
@@ -117,6 +119,7 @@
  '(reb-re-syntax 'string)
  '(recentf-max-menu-items 20)
  '(recentf-max-saved-items 50)
+ '(refactor-indications nil)
  '(rg-keymap-prefix "\3r")
  '(safe-local-variable-values
    '((eval python-black-on-save)
